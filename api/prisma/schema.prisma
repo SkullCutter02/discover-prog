@@ -39,10 +39,11 @@ model Artist {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  numericalId Int?   @unique
+  numericalId Int?    @unique
+  name        String
   biography   String
-  imageUrl    String /// append img src to www.progarchives.com/
-  country     String @db.VarChar(40)
+  imageUrl    String? /// append img src to www.progarchives.com/
+  country     String  @db.VarChar(40)
 
   @@map("artists")
 }

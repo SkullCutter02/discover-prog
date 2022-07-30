@@ -1,9 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import Crawler from "crawler";
 
+import { PrismaService } from "../prisma/prisma.service";
+
 @Injectable()
 export class ScraperService {
-  artists = [];
+  constructor(private readonly prisma: PrismaService) {}
 
   scrapeArtists() {
     let currentId = 1;
@@ -11,7 +13,7 @@ export class ScraperService {
 
     const artistCrawler = new Crawler({
       maxConnections: 10,
-      callback: (err, res, done) => {
+      callback: async (err, res, done) => {
         if (err) {
           console.log(err);
           done();
@@ -27,10 +29,24 @@ export class ScraperService {
             errorCount = 0;
 
             const name = $("h1").first().text();
-            const biography = $("#moreBio").text();
+            const biography = $("#moreBio").html()
+              ? // TODO: remove all link tags from moreBio
+                $("#moreBio").html() // if an artist's bio is long enough
+              : // TODO: remove last div that contains the ad from normal bio
+                $("#main > div > div > div:nth-child(3)").first().html(); // if an artist's bio is short
             const country = $("#main > div > h2").first().text().split(" • ")[1];
             const imageUrl = $("#main > div > div > div > img").first().attr("src");
-            console.log(imageUrl);
+
+            await this.prisma.artist.create({
+              data: {
+                numericalId: currentId,
+                name,
+                biography,
+                imageUrl,
+                country,
+              },
+            });
+            console.log(`Artist with ID ${currentId} has been inserted into the database`);
           }
 
           if (currentId <= 30 && errorCount < 5) {
