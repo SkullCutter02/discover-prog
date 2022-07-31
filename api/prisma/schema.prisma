@@ -44,6 +44,31 @@ model Artist {
   biography   String
   imageUrl    String? /// append img src to www.progarchives.com/
   country     String  @db.VarChar(40)
+  albums      Album[]
 
   @@map("artists")
+}
+
+model Album {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  numericalId  Int?      @unique
+  name         String
+  releaseYear  Int
+  trackListing String
+  musicians    String
+  albumType    AlbumType
+  imageUrl     String?
+
+  artist   Artist @relation(fields: [artistId], references: [id])
+  artistId String
+
+  @@map("albums")
+}
+
+enum AlbumType {
+  STUDIO
+  LIVE
 }
