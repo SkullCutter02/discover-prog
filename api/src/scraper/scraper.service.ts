@@ -1,13 +1,15 @@
 import { Injectable, Logger } from "@nestjs/common";
 import Crawler from "crawler";
+import { AlbumType } from "@prisma/client";
 
 import { ArtistService } from "../artist/artist.service";
+import { AlbumService } from "../album/album.service";
 
 @Injectable()
 export class ScraperService {
   private readonly logger = new Logger(ScraperService.name);
 
-  constructor(private readonly artistService: ArtistService) {}
+  constructor(private readonly artistService: ArtistService, private readonly albumService: AlbumService) {}
 
   async scrapeArtists() {
     const latestArtist = await this.artistService.findBiggestId();
@@ -40,14 +42,19 @@ export class ScraperService {
             const country = $("#main > div > h2").first().text().split(" • ")[1];
             const imageUrl = $("#main > div > div > div > img").first().attr("src");
 
-            await this.artistService.create({
-              numericalId: currentId,
-              name,
-              biography,
-              imageUrl,
-              country,
-            });
-            this.logger.log(`Artist with ID ${currentId} has been inserted into the database`);
+            try {
+              await this.artistService.create({
+                numericalId: currentId,
+                name,
+                biography,
+                imageUrl,
+                country,
+              });
+              this.logger.log(`Artist with ID ${currentId} has been inserted into the database`);
+            } catch (err) {
+              this.logger.error(err);
+              errorCount++;
+            }
           }
         }
 
@@ -63,16 +70,20 @@ export class ScraperService {
     });
 
     artistCrawler.queue(`https://www.progarchives.com/artist.asp?id=${currentId}`);
+
+    artistCrawler.on("drain", () => this.scrapeAlbums());
   }
 
   async scrapeAlbums() {
-    let currentId = 4; // the first 3 albums don't exist
+    const latestAlbum = await this.albumService.findBiggestId();
+
+    let currentId = latestAlbum ? latestAlbum.numericalId + 1 : 4; // the first 3 albums don't exist
     let errorCount = 0;
 
     const albumCrawler = new Crawler({
       maxConnections: 10,
       retries: 1,
-      callback: (err, res, done) => {
+      callback: async (err, res, done) => {
         if (err) {
           this.logger.error(err);
           errorCount++;
@@ -103,6 +114,23 @@ export class ScraperService {
               const musicians = $("td > p:nth-child(7)").first().find("br").replaceWith("\n").end().text();
               const imageUrl = $("td > img:first-child").first().attr("src");
               const artistId = parseInt(artistElement.attr("href").split("?id=")[1]);
+
+              try {
+                await this.albumService.create({
+                  numericalId: currentId,
+                  name,
+                  releaseYear,
+                  trackListing,
+                  musicians,
+                  imageUrl,
+                  albumType: albumType === "Studio Album" ? AlbumType.STUDIO : AlbumType.LIVE,
+                  artist: { connect: { numericalId: artistId } },
+                });
+                this.logger.log(`Album with ID ${currentId} has been inserted into the database`);
+              } catch (err) {
+                this.logger.error(err);
+                errorCount++;
+              }
             }
           }
         }
