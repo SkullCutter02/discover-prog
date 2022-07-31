@@ -14,7 +14,5 @@ export const configModuleOptions: ConfigModuleOptions = {
     REDIS_HOST: Joi.string().required(),
     REDIS_PORT: Joi.number().required(),
     DATABASE_URL: Joi.string().required(),
-    MAX_SCRAPED_ARTIST_ID: Joi.number().required(),
-    MAX_SCRAPED_ALBUM_ID: Joi.number().required(),
   }),
 };
