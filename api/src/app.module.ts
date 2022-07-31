@@ -10,9 +10,10 @@ import { MailModule } from "./mail/mail.module";
 import { RedisModule } from "./redis/redis.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { ScraperModule } from './scraper/scraper.module';
+import { ArtistModule } from './artist/artist.module';
 
 @Module({
-  imports: [ConfigModule.forRoot(configModuleOptions), UserModule, AuthModule, MailModule, RedisModule, PrismaModule, ScraperModule],
+  imports: [ConfigModule.forRoot(configModuleOptions), UserModule, AuthModule, MailModule, RedisModule, PrismaModule, ScraperModule, ArtistModule],
   controllers: [AppController],
   providers: [AppService],
 })

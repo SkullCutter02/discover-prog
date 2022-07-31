@@ -1,19 +1,16 @@
 import { Injectable, Logger } from "@nestjs/common";
 import Crawler from "crawler";
 
-import { PrismaService } from "../prisma/prisma.service";
+import { ArtistService } from "../artist/artist.service";
 
 @Injectable()
 export class ScraperService {
   private readonly logger = new Logger(ScraperService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly artistService: ArtistService) {}
 
   async scrapeArtists() {
-    const latestArtist = await this.prisma.artist.findFirst({
-      select: { numericalId: true },
-      orderBy: { numericalId: "desc" },
-    });
+    const latestArtist = await this.artistService.findBiggestId();
 
     let currentId = latestArtist ? latestArtist.numericalId + 1 : 1; // start scraping from the latest entry + 1
     let errorCount = 0; // if errorCount > 4, that means there have been 5 consecutive nonexistent artists, and therefore stop the process of scraping
@@ -42,14 +39,12 @@ export class ScraperService {
             const country = $("#main > div > h2").first().text().split(" • ")[1];
             const imageUrl = $("#main > div > div > div > img").first().attr("src");
 
-            await this.prisma.artist.create({
-              data: {
-                numericalId: currentId,
-                name,
-                biography,
-                imageUrl,
-                country,
-              },
+            await this.artistService.create({
+              numericalId: currentId,
+              name,
+              biography,
+              imageUrl,
+              country,
             });
             this.logger.log(`Artist with ID ${currentId} has been inserted into the database`);
           }

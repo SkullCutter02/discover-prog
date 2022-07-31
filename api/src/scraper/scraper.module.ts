@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
 
 import { ScraperService } from "./scraper.service";
-import { PrismaModule } from "../prisma/prisma.module";
+import { ArtistModule } from "../artist/artist.module";
 
 @Module({
-  imports: [PrismaModule],
+  imports: [ArtistModule],
   providers: [ScraperService],
 })
 export class ScraperModule {}
