@@ -1,6 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import Crawler from "crawler";
 import { AlbumType } from "@prisma/client";
+import { ConfigService } from "@nestjs/config";
 
 import { ArtistService } from "../artist/artist.service";
 import { AlbumService } from "../album/album.service";
@@ -9,13 +10,18 @@ import { AlbumService } from "../album/album.service";
 export class ScraperService {
   private readonly logger = new Logger(ScraperService.name);
 
-  constructor(private readonly artistService: ArtistService, private readonly albumService: AlbumService) {}
+  constructor(
+    private readonly artistService: ArtistService,
+    private readonly albumService: AlbumService,
+    private readonly configService: ConfigService
+  ) {}
 
   async scrapeArtists() {
     const latestArtist = await this.artistService.findBiggestId();
 
     let currentId = latestArtist ? latestArtist.numericalId + 1 : 1; // start scraping from the latest entry + 1
-    let errorCount = 0; // if errorCount > 4, that means there have been 5 consecutive nonexistent artists, and therefore stop the process of scraping
+
+    const start = Date.now();
 
     const artistCrawler = new Crawler({
       maxConnections: 10,
@@ -23,7 +29,6 @@ export class ScraperService {
       callback: async (err, res, done) => {
         if (err) {
           this.logger.error(err);
-          errorCount++;
         } else {
           const $ = res.$;
 
@@ -31,10 +36,7 @@ export class ScraperService {
 
           if (error && error === "error '80020009'") {
             this.logger.warn(`The artist with ID ${currentId} doesn't exist`);
-            errorCount++;
           } else {
-            errorCount = 0;
-
             const name = $("#main div > strong:first-child").first().text().split(" ")[0];
             const biography = $("#moreBio").text()
               ? $("#moreBio").find("br").replaceWith("\n").end().text() // if an artist's bio is long enough
@@ -53,16 +55,13 @@ export class ScraperService {
               this.logger.log(`Artist with ID ${currentId} has been inserted into the database`);
             } catch (err) {
               this.logger.error(err);
-              errorCount++;
             }
           }
         }
 
-        if (errorCount < 5) {
+        if (currentId < this.configService.get<number>("MAX_SCRAPED_ARTIST_ID")) {
           currentId++;
           artistCrawler.queue(`https://www.progarchives.com/artist.asp?id=${currentId}`);
-        } else {
-          this.logger.log("Finished scraping all artists' information");
         }
 
         done();
@@ -71,14 +70,20 @@ export class ScraperService {
 
     artistCrawler.queue(`https://www.progarchives.com/artist.asp?id=${currentId}`);
 
-    artistCrawler.on("drain", () => this.scrapeAlbums());
+    artistCrawler.on("drain", async () => {
+      const end = Date.now();
+      this.logger.log(`Finished scraping all artists' information in ${(end - start) / 1000}s`);
+
+      await this.scrapeAlbums();
+    });
   }
 
   async scrapeAlbums() {
     const latestAlbum = await this.albumService.findBiggestId();
 
     let currentId = latestAlbum ? latestAlbum.numericalId + 1 : 4; // the first 3 albums don't exist
-    let errorCount = 0;
+
+    const start = Date.now();
 
     const albumCrawler = new Crawler({
       maxConnections: 10,
@@ -86,7 +91,6 @@ export class ScraperService {
       callback: async (err, res, done) => {
         if (err) {
           this.logger.error(err);
-          errorCount++;
         } else {
           const $ = res.$;
 
@@ -94,10 +98,7 @@ export class ScraperService {
 
           if (!head) {
             this.logger.warn(`The album with ID ${currentId} doesn't exist`);
-            errorCount++;
           } else {
-            errorCount = 0;
-
             const albumType = $("td > strong").first().text().split(", ")[0];
 
             // not including singles and compilations
@@ -129,17 +130,14 @@ export class ScraperService {
                 this.logger.log(`Album with ID ${currentId} has been inserted into the database`);
               } catch (err) {
                 this.logger.error(err);
-                errorCount++;
               }
             }
           }
         }
 
-        if (errorCount < 10) {
+        if (currentId < this.configService.get<number>("MAX_SCRAPED_ALBUM_ID")) {
           currentId++;
           albumCrawler.queue(`https://www.progarchives.com/album.asp?id=${currentId}`);
-        } else {
-          this.logger.log("Finished scraping all albums' information");
         }
 
         done();
@@ -147,5 +145,10 @@ export class ScraperService {
     });
 
     albumCrawler.queue(`https://www.progarchives.com/album.asp?id=${currentId}`);
+
+    albumCrawler.on("drain", () => {
+      const end = Date.now();
+      this.logger.log(`Finished scraping all albums' information in ${(end - start) / 1000}s`);
+    });
   }
 }
