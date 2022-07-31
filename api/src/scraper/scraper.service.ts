@@ -57,6 +57,8 @@ export class ScraperService {
           if (errorCount < 5) {
             currentId++;
             artistCrawler.queue(`https://www.progarchives.com/artist.asp?id=${currentId}`);
+          } else {
+            this.logger.log("Finished scraping all artists' information");
           }
 
           done();
