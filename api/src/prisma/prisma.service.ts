@@ -1,8 +1,10 @@
-import { INestApplication, Injectable, OnModuleInit } from "@nestjs/common";
+import { INestApplication, Injectable, OnModuleInit, Logger } from "@nestjs/common";
 import { PrismaClient } from "@prisma/client";
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
+  private readonly logger = new Logger(PrismaService.name);
+
   async onModuleInit() {
     this.$use(async (params, next) => {
       const before = Date.now();
@@ -11,7 +13,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
 
       const after = Date.now();
 
-      console.log(`Query ${params.model}.${params.action} took ${after - before}ms`);
+      this.logger.log(`Query ${params.model}.${params.action} took ${after - before}ms`);
 
       return result;
     });
