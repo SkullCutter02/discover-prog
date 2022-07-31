@@ -17,10 +17,11 @@ export class ScraperService {
 
     const artistCrawler = new Crawler({
       maxConnections: 10,
+      retries: 1,
       callback: async (err, res, done) => {
         if (err) {
           this.logger.error(err);
-          done();
+          errorCount++;
         } else {
           const $ = res.$;
 
@@ -32,10 +33,10 @@ export class ScraperService {
           } else {
             errorCount = 0;
 
-            const name = $("h1").first().text();
-            const biography = $("#moreBio").html()
-              ? $("#moreBio").html() // if an artist's bio is long enough
-              : $("#main > div > div > div:nth-child(3)").first().html(); // if an artist's bio is short
+            const name = $("#main div > strong:first-child").first().text().split(" ")[0];
+            const biography = $("#moreBio").text()
+              ? $("#moreBio").find("br").replaceWith("\n").end().text() // if an artist's bio is long enough
+              : $("#main > div > div > div:nth-child(3)").first().find("br").replaceWith("\n").end().text(); // if an artist's bio is short
             const country = $("#main > div > h2").first().text().split(" • ")[1];
             const imageUrl = $("#main > div > div > div > img").first().attr("src");
 
@@ -48,19 +49,75 @@ export class ScraperService {
             });
             this.logger.log(`Artist with ID ${currentId} has been inserted into the database`);
           }
-
-          if (errorCount < 5) {
-            currentId++;
-            artistCrawler.queue(`https://www.progarchives.com/artist.asp?id=${currentId}`);
-          } else {
-            this.logger.log("Finished scraping all artists' information");
-          }
-
-          done();
         }
+
+        if (errorCount < 5) {
+          currentId++;
+          artistCrawler.queue(`https://www.progarchives.com/artist.asp?id=${currentId}`);
+        } else {
+          this.logger.log("Finished scraping all artists' information");
+        }
+
+        done();
       },
     });
 
     artistCrawler.queue(`https://www.progarchives.com/artist.asp?id=${currentId}`);
+  }
+
+  async scrapeAlbums() {
+    let currentId = 4; // the first 3 albums don't exist
+    let errorCount = 0;
+
+    const albumCrawler = new Crawler({
+      maxConnections: 10,
+      retries: 1,
+      callback: (err, res, done) => {
+        if (err) {
+          this.logger.error(err);
+          errorCount++;
+        } else {
+          const $ = res.$;
+
+          const head = $("head").html(); // when the album doesn't exist, the head is empty
+
+          if (!head) {
+            this.logger.warn(`The album with ID ${currentId} doesn't exist`);
+            errorCount++;
+          } else {
+            errorCount = 0;
+
+            const albumType = $("td > strong").first().text().split(", ")[0];
+
+            // not including singles and compilations
+            if (albumType === "Studio Album" || albumType === "Live") {
+              const artistElement = $("h2 > a").first();
+
+              const name = $("#reviews + h2")
+                .first()
+                .text()
+                .split(" ratings")[0]
+                .split(artistElement.text().toUpperCase() + " ")[1];
+              const releaseYear = parseInt($("td > strong").first().text().split("released in ")[1]);
+              const trackListing = $("td > p:nth-child(5)").first().find("br").replaceWith("\n").end().text();
+              const musicians = $("td > p:nth-child(7)").first().find("br").replaceWith("\n").end().text();
+              const imageUrl = $("td > img:first-child").first().attr("src");
+              const artistId = parseInt(artistElement.attr("href").split("?id=")[1]);
+            }
+          }
+        }
+
+        if (errorCount < 10) {
+          currentId++;
+          albumCrawler.queue(`https://www.progarchives.com/album.asp?id=${currentId}`);
+        } else {
+          this.logger.log("Finished scraping all albums' information");
+        }
+
+        done();
+      },
+    });
+
+    albumCrawler.queue(`https://www.progarchives.com/album.asp?id=${currentId}`);
   }
 }
