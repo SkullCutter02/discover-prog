@@ -118,11 +118,23 @@ export class ScraperService {
             if (albumType === "Studio Album" || albumType === "Live") {
               const artistElement = $("h2 > a").first();
 
-              const name = $("#reviews + h2")
-                .first()
-                .text()
-                .split(" ratings")[0]
-                .split(artistElement.text().toUpperCase() + " ")[1];
+              const name =
+                $("#reviews + h2")
+                  .first()
+                  .text()
+                  .split(" ratings")[0]
+                  .split(artistElement.text().toUpperCase() + " ")[1] ??
+                $("#reviews + h2") // when the website converts special characters in the artist's name
+                  .first()
+                  .text()
+                  .split(" ratings")[0]
+                  .split(
+                    artistElement
+                      .text()
+                      .normalize("NFD")
+                      .replace(/[\u0300-\u036f]/g, "")
+                      .toUpperCase() + " "
+                  )[1];
               const releaseYear = parseInt($("td > strong").first().text().split("released in ")[1]);
               const trackListing = $("td > p:nth-child(5)").first().find("br").replaceWith("\n").end().text();
               const musicians = $("td > p:nth-child(7)").first().find("br").replaceWith("\n").end().text();
