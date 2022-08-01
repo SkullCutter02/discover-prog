@@ -1,0 +1,1 @@
+CREATE EXTENSION IF NOT EXISTS unaccent; -- This is an empty migration.
