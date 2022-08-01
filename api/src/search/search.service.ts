@@ -29,7 +29,7 @@ export class SearchService {
       WHERE unaccent(name) ILIKE ${ilike} 
          OR (unaccent(name) <-> ${query}) < 0.7
          OR (unaccent(artist_name) <% ${query}) IS TRUE
-      ORDER BY rank 
+      ORDER BY rank, "releaseYear" 
       LIMIT ${limit}
       OFFSET ${(page - 1) * limit}
     `;
