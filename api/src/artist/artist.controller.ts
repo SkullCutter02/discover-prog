@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseUUIDPipe, Query } from "@nestjs/common";
+import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Query } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 
 import { ParseIncludeQueryPipe } from "../pipes/parseIncludeQuery.pipe";
@@ -14,5 +14,10 @@ export class ArtistController {
     @Query("include", ParseIncludeQueryPipe) include: Prisma.ArtistInclude
   ) {
     return this.artistService.findById(artistId, include);
+  }
+
+  @Patch("/:id/biography")
+  editBiography(@Param("id", ParseUUIDPipe) artistId: string, @Body("biography") biography: string) {
+    return this.artistService.edit(artistId, { biography });
   }
 }

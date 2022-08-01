@@ -26,4 +26,11 @@ export class ArtistService {
       data: input,
     });
   }
+
+  edit(artistId: string, input: Prisma.ArtistUpdateInput) {
+    return this.prisma.artist.update({
+      where: { id: artistId },
+      data: input,
+    });
+  }
 }
