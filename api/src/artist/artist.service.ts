@@ -1,10 +1,18 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
 import { Prisma } from "@prisma/client";
+
+import { PrismaService } from "../prisma/prisma.service";
 
 @Injectable()
 export class ArtistService {
   constructor(private readonly prisma: PrismaService) {}
+
+  findById(artistId: string, include?: Prisma.ArtistInclude) {
+    return this.prisma.artist.findFirst({
+      where: { id: artistId },
+      include,
+    });
+  }
 
   findBiggestId() {
     return this.prisma.artist.findFirst({

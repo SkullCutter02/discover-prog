@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 
 import { PrismaService } from "../prisma/prisma.service";
-import { OffsetPaginateDto } from "../shared/offsetPaginate.dto";
+import { OffsetPaginateDto } from "../dto/offsetPaginate.dto";
 
 @Injectable()
 export class SearchService {

@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from "@nestjs/common";
 
 import { SearchService } from "./search.service";
-import { OffsetPaginateDto } from "../shared/offsetPaginate.dto";
+import { OffsetPaginateDto } from "../dto/offsetPaginate.dto";
 
 @Controller("search")
 export class SearchController {
