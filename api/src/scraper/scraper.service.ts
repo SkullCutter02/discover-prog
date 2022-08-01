@@ -88,7 +88,7 @@ export class ScraperService {
     const tasks = [];
 
     for (
-      let i = latestAlbum ? latestAlbum.numericalId + 1 : 4;
+      let i = latestAlbum ? latestAlbum.numericalId + 1 : 2;
       i < this.configService.get<number>("MAX_SCRAPE_ALBUM_ID");
       i++
     ) {
