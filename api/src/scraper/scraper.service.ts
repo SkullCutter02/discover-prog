@@ -35,7 +35,7 @@ export class ScraperService {
             this.logger.warn(`The artist with ID ${currentId} doesn't exist`);
             errorCount++;
           } else {
-            const name = $("#main div > strong:first-child").first().text().split(" ")[0];
+            const name = $("#main div > strong:first-child").first().text().split(" biography")[0];
             const biography = $("#moreBio").text()
               ? $("#moreBio").find("br").replaceWith("\n").end().text() // if an artist's bio is long enough
               : $("#main > div > div > div:nth-child(3)").first().find("br").replaceWith("\n").end().text(); // if an artist's bio is short
