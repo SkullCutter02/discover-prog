@@ -1,12 +1,13 @@
 import { Injectable } from "@nestjs/common";
 
 import { PrismaService } from "../prisma/prisma.service";
+import { OffsetPaginateDto } from "../shared/offsetPaginate.dto";
 
 @Injectable()
 export class SearchService {
   constructor(private readonly prisma: PrismaService) {}
 
-  searchWithQuery(query: string) {
+  searchWithQuery(query: string, { page, limit }: OffsetPaginateDto) {
     const ilike = `%${query}%`;
 
     return this.prisma.$queryRaw`
@@ -28,7 +29,9 @@ export class SearchService {
       WHERE unaccent(name) ILIKE ${ilike} 
          OR (unaccent(name) <-> ${query}) < 0.7
          OR (unaccent(artist_name) <% ${query}) IS TRUE
-      ORDER BY rank; 
+      ORDER BY rank 
+      LIMIT ${limit}
+      OFFSET ${(page - 1) * limit}
     `;
   }
 }
