@@ -1,6 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import Crawler from "crawler";
 import { AlbumType } from "@prisma/client";
+import { ConfigService } from "@nestjs/config";
 
 import { ArtistService } from "../artist/artist.service";
 import { AlbumService } from "../album/album.service";
@@ -9,31 +10,41 @@ import { AlbumService } from "../album/album.service";
 export class ScraperService {
   private readonly logger = new Logger(ScraperService.name);
 
-  constructor(private readonly artistService: ArtistService, private readonly albumService: AlbumService) {}
+  constructor(
+    private readonly artistService: ArtistService,
+    private readonly albumService: AlbumService,
+    private readonly configService: ConfigService
+  ) {}
 
   async scrapeArtists() {
     const latestArtist = await this.artistService.findBiggestId();
 
-    let currentId = latestArtist ? latestArtist.numericalId + 1 : 1; // start scraping from the latest entry + 1
-    let errorCount = 0;
+    const tasks = [];
+
+    for (
+      let i = latestArtist ? latestArtist.numericalId + 1 : 1;
+      i < this.configService.get<number>("MAX_SCRAPE_ARTIST_ID");
+      i++
+    ) {
+      tasks.push({ uri: `https://www.progarchives.com/artist.asp?id=${i}`, currentId: i });
+    }
 
     const start = Date.now();
 
     const artistCrawler = new Crawler({
       maxConnections: 10,
-      retries: 1,
+      retries: 2,
       callback: async (err, res, done) => {
         if (err) {
           this.logger.error(err);
-          errorCount++;
         } else {
           const $ = res.$;
+          const currentId: number = res.options.currentId;
 
           const error = $("font").first().text();
 
           if (error && error === "error '80020009'") {
             this.logger.warn(`The artist with ID ${currentId} doesn't exist`);
-            errorCount++;
           } else {
             const name = $("#main div > strong:first-child").first().text().split(" biography")[0];
             const biography = $("#moreBio").text()
@@ -51,24 +62,17 @@ export class ScraperService {
                 country,
               });
               this.logger.log(`Artist with ID ${currentId} has been inserted into the database`);
-              errorCount = 0;
             } catch (err) {
               this.logger.error(err);
-              errorCount++;
             }
           }
-        }
-
-        if (errorCount < 50) {
-          currentId++;
-          artistCrawler.queue(`https://www.progarchives.com/artist.asp?id=${currentId}`);
         }
 
         done();
       },
     });
 
-    artistCrawler.queue(`https://www.progarchives.com/artist.asp?id=${currentId}`);
+    artistCrawler.queue(tasks);
 
     artistCrawler.on("drain", async () => {
       const end = Date.now();
@@ -81,26 +85,32 @@ export class ScraperService {
   async scrapeAlbums() {
     const latestAlbum = await this.albumService.findBiggestId();
 
-    let currentId = latestAlbum ? latestAlbum.numericalId + 1 : 4; // the first 3 albums don't exist
-    let errorCount = 0;
+    const tasks = [];
+
+    for (
+      let i = latestAlbum ? latestAlbum.numericalId + 1 : 4;
+      i < this.configService.get<number>("MAX_SCRAPE_ALBUM_ID");
+      i++
+    ) {
+      tasks.push({ uri: `https://www.progarchives.com/album.asp?id=${i}`, currentId: i });
+    }
 
     const start = Date.now();
 
     const albumCrawler = new Crawler({
       maxConnections: 10,
-      retries: 1,
+      retries: 2,
       callback: async (err, res, done) => {
         if (err) {
           this.logger.error(err);
-          errorCount++;
         } else {
           const $ = res.$;
+          const currentId = res.options.currentId;
 
           const head = $("head").html(); // when the album doesn't exist, the head is empty
 
           if (!head) {
             this.logger.warn(`The album with ID ${currentId} doesn't exist`);
-            errorCount++;
           } else {
             const albumType = $("td > strong").first().text().split(", ")[0];
 
@@ -131,25 +141,18 @@ export class ScraperService {
                   artist: { connect: { numericalId: artistId } },
                 });
                 this.logger.log(`Album with ID ${currentId} has been inserted into the database`);
-                errorCount = 0;
               } catch (err) {
                 this.logger.error(err);
-                errorCount++;
               }
             }
           }
-        }
-
-        if (errorCount < 100) {
-          currentId++;
-          albumCrawler.queue(`https://www.progarchives.com/album.asp?id=${currentId}`);
         }
 
         done();
       },
     });
 
-    albumCrawler.queue(`https://www.progarchives.com/album.asp?id=${currentId}`);
+    albumCrawler.queue(tasks);
 
     albumCrawler.on("drain", () => {
       const end = Date.now();
