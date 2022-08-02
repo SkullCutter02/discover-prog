@@ -17,6 +17,7 @@ model User {
 
   name  String
   email String @unique
+  role  Role   @default(MEMBER)
 
   info Info?
 
@@ -66,6 +67,12 @@ model Album {
   artistId String
 
   @@map("albums")
+}
+
+enum Role {
+  MEMBER
+  EDITOR
+  ADMIN
 }
 
 enum AlbumType {
