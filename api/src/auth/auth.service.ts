@@ -108,7 +108,7 @@ export class AuthService {
         expiresIn: this.configService.get("JWT_ACCESS_TOKEN_EXPIRATION_TIME"),
       }
     );
-    const cookie = `access-token=${token}; HttpOnly; Path=/; SameSite=Lax Max-Age=${this.configService.get<number>(
+    const cookie = `access-token=${token}; HttpOnly; Path=/; SameSite=Lax; Max-Age=${this.configService.get<number>(
       "JWT_ACCESS_TOKEN_EXPIRATION_TIME"
     )}`;
     return { cookie, token };
@@ -122,7 +122,7 @@ export class AuthService {
         expiresIn: this.configService.get("JWT_REFRESH_TOKEN_EXPIRATION_TIME"),
       }
     );
-    const cookie = `refresh-token=${token}; HttpOnly; Path=/; SameSite=Lax Max-Age=${this.configService.get<number>(
+    const cookie = `refresh-token=${token}; HttpOnly; Path=/; SameSite=Lax; Max-Age=${this.configService.get<number>(
       "JWT_REFRESH_TOKEN_EXPIRATION_TIME"
     )}`;
     return { cookie, token };

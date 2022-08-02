@@ -1,8 +1,11 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Query } from "@nestjs/common";
-import { Prisma } from "@prisma/client";
+import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Query, UseGuards } from "@nestjs/common";
+import { Prisma, Role } from "@prisma/client";
 
 import { ParseIncludeQueryPipe } from "../pipes/parseIncludeQuery.pipe";
 import { ArtistService } from "./artist.service";
+import { Roles } from "../decorators/roles.decorator";
+import { JwtAuthGuard } from "../auth/guards/jwt.guard";
+import { RolesGuard } from "../guards/roles.guard";
 
 @Controller("artist")
 export class ArtistController {
@@ -17,6 +20,8 @@ export class ArtistController {
   }
 
   @Patch("/:id/biography")
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.EDITOR, Role.ADMIN)
   editBiography(@Param("id", ParseUUIDPipe) artistId: string, @Body("biography") biography: string) {
     return this.artistService.edit(artistId, { biography });
   }
