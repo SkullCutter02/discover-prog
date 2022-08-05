@@ -7,6 +7,13 @@ import { PrismaService } from "../prisma/prisma.service";
 export class AlbumService {
   constructor(private readonly prisma: PrismaService) {}
 
+  findById(albumId: string, include?: Prisma.AlbumInclude) {
+    return this.prisma.album.findFirst({
+      where: { id: albumId },
+      include,
+    });
+  }
+
   findBiggestId() {
     return this.prisma.album.findFirst({
       select: { numericalId: true },
