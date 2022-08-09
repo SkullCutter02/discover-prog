@@ -6,6 +6,7 @@ import { ArtistService } from "./artist.service";
 import { Roles } from "../decorators/roles.decorator";
 import { JwtAuthGuard } from "../auth/guards/jwt.guard";
 import { RolesGuard } from "../guards/roles.guard";
+import { EditAlbumDto } from "../album/dto/editAlbum.dto";
 
 @Controller("artist")
 export class ArtistController {
@@ -19,10 +20,10 @@ export class ArtistController {
     return this.artistService.findById(artistId, include);
   }
 
-  @Patch("/:id/biography")
+  @Patch("/:id")
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.EDITOR, Role.ADMIN)
-  editBiography(@Param("id", ParseUUIDPipe) artistId: string, @Body("biography") biography: string) {
-    return this.artistService.edit(artistId, { biography });
+  edit(@Param("id", ParseUUIDPipe) artistId: string, @Body() editAlbumDto: EditAlbumDto) {
+    return this.artistService.edit(artistId, editAlbumDto);
   }
 }

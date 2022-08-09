@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 
 import { PrismaService } from "../prisma/prisma.service";
+import { EditAlbumDto } from "../album/dto/editAlbum.dto";
 
 @Injectable()
 export class ArtistService {
@@ -27,7 +28,7 @@ export class ArtistService {
     });
   }
 
-  edit(artistId: string, input: Prisma.ArtistUpdateInput) {
+  edit(artistId: string, input: EditAlbumDto) {
     return this.prisma.artist.update({
       where: { id: artistId },
       data: input,
