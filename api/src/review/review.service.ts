@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { ConflictException, Injectable } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 
 import { PrismaService } from "../prisma/prisma.service";
@@ -33,7 +33,13 @@ export class ReviewService {
     });
   }
 
-  create({ albumId, ...data }: CreateReviewDto, userId: string) {
+  async create({ albumId, ...data }: CreateReviewDto, userId: string) {
+    const count = await this.prismaService.review.count({
+      where: { albumId, userId },
+    });
+
+    if (count > 1) throw new ConflictException("User has already created a review for this album");
+
     return this.prismaService.review.create({
       data: {
         ...data,
