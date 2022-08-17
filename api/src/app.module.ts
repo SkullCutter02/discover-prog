@@ -14,6 +14,7 @@ import { ArtistModule } from "./artist/artist.module";
 import { AlbumModule } from "./album/album.module";
 import { SearchModule } from "./search/search.module";
 import { GenreModule } from './genre/genre.module';
+import { ReviewModule } from './review/review.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { GenreModule } from './genre/genre.module';
     AlbumModule,
     SearchModule,
     GenreModule,
+    ReviewModule,
   ],
   controllers: [AppController],
   providers: [AppService],

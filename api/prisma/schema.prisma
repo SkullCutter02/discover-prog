@@ -83,7 +83,7 @@ model Genre {
 }
 
 model Review {
-  id        Int      @id
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
