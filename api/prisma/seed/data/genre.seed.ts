@@ -156,7 +156,7 @@ const genres: Omit<Genre, "createdAt" | "updatedAt">[] = [
   },
   {
     id: 32,
-    name: "Post Rock/Math Rock",
+    name: "Post Rock/Math rock",
     description:
       "POST-ROCK:\n" +
       "\n" +

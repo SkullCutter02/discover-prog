@@ -157,6 +157,7 @@ export class ScraperService {
                 this.logger.log(`Album with ID ${currentId} has been inserted into the database`);
               } catch (err) {
                 this.logger.error(err);
+                this.logger.error(`Album with ID ${currentId} cannot be inserted into the database`);
               }
             }
           }
