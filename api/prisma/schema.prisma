@@ -65,8 +65,22 @@ model Album {
 
   artist   Artist @relation(fields: [artistId], references: [id])
   artistId String
+  genre    Genre  @relation(fields: [genreId], references: [id])
+  genreId  Int
 
   @@map("albums")
+}
+
+model Genre {
+  id        Int      @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name        String
+  description String
+  albums      Album[]
+
+  @@map("genres")
 }
 
 enum Role {

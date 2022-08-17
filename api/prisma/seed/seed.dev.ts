@@ -2,10 +2,21 @@ import { PrismaClient } from "@prisma/client";
 
 import users from "./data/users.seed";
 import infos from "./data/info.seed";
+import genres from "./data/genre.seed";
 
 const prisma = new PrismaClient();
 
 async function runSeeders() {
+  await Promise.all(
+    genres.map((genre) =>
+      prisma.genre.upsert({
+        where: { id: genre.id },
+        update: {},
+        create: genre,
+      })
+    )
+  );
+
   await Promise.all(
     users.map((user) =>
       prisma.user.upsert({
