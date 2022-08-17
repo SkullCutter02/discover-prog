@@ -7,10 +7,16 @@ import { JwtAuthGuard } from "../auth/guards/jwt.guard";
 import { RolesGuard } from "../guards/roles.guard";
 import { Roles } from "../decorators/roles.decorator";
 import { EditAlbumDto } from "./dto/editAlbum.dto";
+import { OffsetPaginateDto } from "../dto/offsetPaginate.dto";
 
 @Controller("album")
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
+
+  @Get("/top-rated")
+  findHighestRatedAlbums(@Query() offsetPaginateDto: OffsetPaginateDto) {
+    return this.albumService.findHighestRated(offsetPaginateDto);
+  }
 
   @Get("/:id")
   getAlbum(

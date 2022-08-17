@@ -3,6 +3,7 @@ import { Prisma } from "@prisma/client";
 
 import { PrismaService } from "../prisma/prisma.service";
 import { EditAlbumDto } from "./dto/editAlbum.dto";
+import { OffsetPaginateDto } from "../dto/offsetPaginate.dto";
 
 @Injectable()
 export class AlbumService {
@@ -33,5 +34,19 @@ export class AlbumService {
       where: { id: albumId },
       data: input,
     });
+  }
+
+  findHighestRated({ limit, page }: OffsetPaginateDto) {
+    return this.prisma.$queryRaw`
+      SELECT albums.*, cast(sum(r.rating * 
+        (SELECT count(*) FROM reviews WHERE reviews."albumId" = albums.id)) / 
+        (SELECT count(*) FROM reviews) AS decimal(8, 2)) AS qwr 
+      FROM albums 
+      INNER JOIN reviews r on albums.id = r."albumId" 
+      GROUP BY albums.id
+      ORDER BY qwr DESC
+      LIMIT ${limit}
+      OFFSET ${(page - 1) * limit}
+    `;
   }
 }
