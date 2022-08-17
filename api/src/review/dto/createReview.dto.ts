@@ -1,4 +1,4 @@
-import { IsString, IsUUID, Max, Min } from "class-validator";
+import { IsOptional, IsString, IsUUID, Max, Min } from "class-validator";
 
 export class CreateReviewDto {
   @Min(1)
@@ -6,7 +6,8 @@ export class CreateReviewDto {
   rating: number;
 
   @IsString()
-  body: string;
+  @IsOptional()
+  body?: string;
 
   @IsUUID(4)
   albumId: string;
