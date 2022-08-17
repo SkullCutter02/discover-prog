@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { Prisma, User } from "@prisma/client";
 
 import { JwtAuthGuard } from "../auth/guards/jwt.guard";
@@ -7,6 +7,9 @@ import { CreateReviewDto } from "./dto/createReview.dto";
 import { ReviewService } from "./review.service";
 import { ParseIncludeQueryPipe } from "../pipes/parseIncludeQuery.pipe";
 import { OffsetPaginateDto } from "../dto/offsetPaginate.dto";
+import { CheckOwnershipGuard } from "../guards/checkOwnership.guard";
+import { CheckOwnership } from "../decorators/checkOwnership.decorator";
+import { EditReviewDto } from "./dto/editReview.dto";
 
 @Controller("review")
 export class ReviewController {
@@ -34,5 +37,12 @@ export class ReviewController {
   @UseGuards(JwtAuthGuard)
   createReview(@GetUser() user: User, @Body() createReviewDto: CreateReviewDto) {
     return this.reviewService.create(createReviewDto, user.id);
+  }
+
+  @Patch("/:id")
+  @CheckOwnership({ of: "review" })
+  @UseGuards(JwtAuthGuard, CheckOwnershipGuard)
+  editReview(@Param("id", ParseUUIDPipe) reviewId: string, @Body() editReviewDto: EditReviewDto) {
+    return this.reviewService.edit(reviewId, editReviewDto);
   }
 }

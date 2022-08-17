@@ -4,6 +4,7 @@ import { Prisma } from "@prisma/client";
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateReviewDto } from "./dto/createReview.dto";
 import { OffsetPaginateDto } from "../dto/offsetPaginate.dto";
+import { EditReviewDto } from "./dto/editReview.dto";
 
 @Injectable()
 export class ReviewService {
@@ -47,6 +48,13 @@ export class ReviewService {
           },
         },
       },
+    });
+  }
+
+  edit(reviewId: string, data: EditReviewDto) {
+    return this.prismaService.review.update({
+      where: { id: reviewId },
+      data,
     });
   }
 }
