@@ -140,6 +140,7 @@ export class ScraperService {
               const musicians = $("td > p:nth-child(7)").first().find("br").replaceWith("\n").end().text();
               const imageUrl = $("td > img:first-child").first().attr("src");
               const artistId = parseInt(artistElement.attr("href").split("?id=")[1]);
+              const genreName = $("#main > div:first-child > h2:nth-child(3)").text();
 
               try {
                 await this.albumService.create({
@@ -151,6 +152,7 @@ export class ScraperService {
                   imageUrl,
                   albumType: albumType === "Studio Album" ? AlbumType.STUDIO : AlbumType.LIVE,
                   artist: { connect: { numericalId: artistId } },
+                  genre: { connect: { name: genreName } },
                 });
                 this.logger.log(`Album with ID ${currentId} has been inserted into the database`);
               } catch (err) {

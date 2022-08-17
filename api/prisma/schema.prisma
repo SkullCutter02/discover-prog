@@ -76,7 +76,7 @@ model Genre {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  name        String
+  name        String @unique
   description String
   albums      Album[]
 
