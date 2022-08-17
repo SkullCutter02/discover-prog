@@ -6,10 +6,21 @@ import { GetUser } from "../decorators/getUser.decorator";
 import { CreateReviewDto } from "./dto/createReview.dto";
 import { ReviewService } from "./review.service";
 import { ParseIncludeQueryPipe } from "../pipes/parseIncludeQuery.pipe";
+import { OffsetPaginateDto } from "../dto/offsetPaginate.dto";
 
 @Controller("review")
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
+
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  getReviews(
+    @GetUser() user: User,
+    @Query("include", ParseIncludeQueryPipe) include: Prisma.ReviewInclude,
+    @Query() offsetPaginateDto: OffsetPaginateDto
+  ) {
+    return this.reviewService.findByUser(user.id, offsetPaginateDto, include);
+  }
 
   @Get("/:id")
   getReview(
