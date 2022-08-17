@@ -57,4 +57,10 @@ export class ReviewService {
       data,
     });
   }
+
+  delete(reviewId: string) {
+    return this.prismaService.review.delete({
+      where: { id: reviewId },
+    });
+  }
 }

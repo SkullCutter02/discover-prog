@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { Prisma, User } from "@prisma/client";
 
 import { JwtAuthGuard } from "../auth/guards/jwt.guard";
@@ -44,5 +44,12 @@ export class ReviewController {
   @UseGuards(JwtAuthGuard, CheckOwnershipGuard)
   editReview(@Param("id", ParseUUIDPipe) reviewId: string, @Body() editReviewDto: EditReviewDto) {
     return this.reviewService.edit(reviewId, editReviewDto);
+  }
+
+  @Delete("/:id")
+  @CheckOwnership({ of: "review" })
+  @UseGuards(JwtAuthGuard, CheckOwnershipGuard)
+  deleteReview(@Param("id", ParseUUIDPipe) reviewId: string) {
+    return this.reviewService.delete(reviewId);
   }
 }
