@@ -36,7 +36,7 @@ export class AlbumService {
     });
   }
 
-  async findRating(albumId: string) {
+  async findRanking(albumId: string) {
     const album = await this.findById(albumId);
 
     const globalRanking = await this.prisma.$queryRaw<[{ rank: number }]>`

@@ -28,7 +28,7 @@ export class AlbumController {
 
   @Get("/:id/ranking")
   getAlbumRanking(@Param("id", ParseUUIDPipe) albumId: string) {
-    return this.albumService.findRating(albumId);
+    return this.albumService.findRanking(albumId);
   }
 
   @Patch("/:id")
