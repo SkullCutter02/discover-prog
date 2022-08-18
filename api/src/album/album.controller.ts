@@ -26,6 +26,11 @@ export class AlbumController {
     return this.albumService.findById(albumId, include);
   }
 
+  @Get("/:id/ranking")
+  getAlbumRanking(@Param("id", ParseUUIDPipe) albumId: string) {
+    return this.albumService.findRating(albumId);
+  }
+
   @Patch("/:id")
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.EDITOR, Role.ADMIN)
