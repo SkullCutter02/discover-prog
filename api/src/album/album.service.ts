@@ -55,15 +55,15 @@ export class AlbumService {
     `;
 
     const genreRanking = await this.prisma.$queryRaw<[{ rank: number }]>`
-        WITH albums_with_rank AS (
-          SELECT id, dense_rank() OVER (ORDER BY qwr DESC)::int AS rank FROM
-            (SELECT albums.id, (sum(r.rating * 
-              (SELECT count(*) FROM reviews WHERE reviews."albumId" = albums.id)) / 
-              (SELECT count(*) FROM reviews))::decimal(8, 2)::float AS qwr
-          FROM albums    
-          INNER JOIN reviews r on albums.id = r."albumId"
-          WHERE "genreId" = ${album.genreId}  
-          GROUP BY albums.id) albums_with_ratings
+      WITH albums_with_rank AS (
+        SELECT id, dense_rank() OVER (ORDER BY qwr DESC)::int AS rank FROM
+          (SELECT albums.id, (sum(r.rating * 
+            (SELECT count(*) FROM reviews WHERE reviews."albumId" = albums.id)) / 
+            (SELECT count(*) FROM reviews))::decimal(8, 2)::float AS qwr
+        FROM albums    
+        INNER JOIN reviews r on albums.id = r."albumId"
+        WHERE "genreId" = ${album.genreId}  
+        GROUP BY albums.id) albums_with_ratings
       )
       SELECT rank FROM albums_with_rank
       WHERE id = ${albumId}
