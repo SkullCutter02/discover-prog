@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "albums" ADD COLUMN     "popularity" INTEGER NOT NULL DEFAULT 1660811863;

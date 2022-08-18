@@ -60,6 +60,7 @@ model Album {
   musicians    String
   albumType    AlbumType
   imageUrl     String?
+  popularity   Int       @default(1660811863)
   reviews      Review[]
 
   artist   Artist @relation(fields: [artistId], references: [id])
