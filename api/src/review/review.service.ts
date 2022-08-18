@@ -9,14 +9,14 @@ import { AlbumService } from "../album/album.service";
 
 @Injectable()
 export class ReviewService {
-  constructor(private readonly prismaService: PrismaService, private readonly albumService: AlbumService) {}
+  constructor(private readonly prisma: PrismaService, private readonly albumService: AlbumService) {}
 
   async findByUser(userId: string, { limit, page }: OffsetPaginateDto, include?: Prisma.ReviewInclude) {
-    const [totalReviewCount, reviews] = await this.prismaService.$transaction([
-      this.prismaService.review.count({
+    const [totalReviewCount, reviews] = await this.prisma.$transaction([
+      this.prisma.review.count({
         where: { userId },
       }),
-      this.prismaService.review.findMany({
+      this.prisma.review.findMany({
         where: { userId },
         skip: (page - 1) * limit,
         take: limit,
@@ -28,20 +28,20 @@ export class ReviewService {
   }
 
   findById(reviewId: string, include?: Prisma.ReviewInclude) {
-    return this.prismaService.review.findUnique({
+    return this.prisma.review.findUnique({
       where: { id: reviewId },
       include,
     });
   }
 
   async create({ albumId, ...data }: CreateReviewDto, userId: string) {
-    const count = await this.prismaService.review.count({
+    const count = await this.prisma.review.count({
       where: { albumId, userId },
     });
 
     if (count > 1) throw new ConflictException("User has already created a review for this album");
 
-    const review = await this.prismaService.review.create({
+    const review = await this.prisma.review.create({
       data: {
         ...data,
         album: {
@@ -63,15 +63,24 @@ export class ReviewService {
   }
 
   edit(reviewId: string, data: EditReviewDto) {
-    return this.prismaService.review.update({
+    return this.prisma.review.update({
       where: { id: reviewId },
       data,
     });
   }
 
   delete(reviewId: string) {
-    return this.prismaService.review.delete({
+    return this.prisma.review.delete({
       where: { id: reviewId },
+    });
+  }
+
+  findLatest({ limit, page }: OffsetPaginateDto, include: Prisma.ReviewInclude) {
+    return this.prisma.review.findMany({
+      orderBy: { createdAt: "desc" },
+      take: limit,
+      skip: (page - 1) * limit,
+      include,
     });
   }
 }

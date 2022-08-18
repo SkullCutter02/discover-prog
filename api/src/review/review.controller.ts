@@ -25,6 +25,14 @@ export class ReviewController {
     return this.reviewService.findByUser(user.id, offsetPaginateDto, include);
   }
 
+  @Get("/latest")
+  getLatestReviews(
+    @Query() offsetPaginateDto: OffsetPaginateDto,
+    @Query("include", ParseIncludeQueryPipe) include: Prisma.ReviewInclude
+  ) {
+    return this.reviewService.findLatest(offsetPaginateDto, include);
+  }
+
   @Get("/:id")
   getReview(
     @Param("id", ParseUUIDPipe) reviewId: string,
