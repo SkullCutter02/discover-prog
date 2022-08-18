@@ -89,4 +89,16 @@ export class AlbumService {
       OFFSET ${(page - 1) * limit}
     `;
   }
+
+  async updatePopularity(albumId: string) {
+    const album = await this.findById(albumId);
+
+    const currentEpochTime = Math.floor(Date.now() / 1000);
+    const newPopularity = (album.popularity + currentEpochTime) / 2;
+
+    return this.prisma.album.update({
+      where: { id: albumId },
+      data: { popularity: newPopularity },
+    });
+  }
 }

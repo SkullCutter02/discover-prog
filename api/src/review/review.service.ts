@@ -5,10 +5,11 @@ import { PrismaService } from "../prisma/prisma.service";
 import { CreateReviewDto } from "./dto/createReview.dto";
 import { OffsetPaginateDto } from "../dto/offsetPaginate.dto";
 import { EditReviewDto } from "./dto/editReview.dto";
+import { AlbumService } from "../album/album.service";
 
 @Injectable()
 export class ReviewService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService, private readonly albumService: AlbumService) {}
 
   async findByUser(userId: string, { limit, page }: OffsetPaginateDto, include?: Prisma.ReviewInclude) {
     const [totalReviewCount, reviews] = await this.prismaService.$transaction([
@@ -40,7 +41,7 @@ export class ReviewService {
 
     if (count > 1) throw new ConflictException("User has already created a review for this album");
 
-    return this.prismaService.review.create({
+    const review = await this.prismaService.review.create({
       data: {
         ...data,
         album: {
@@ -55,6 +56,10 @@ export class ReviewService {
         },
       },
     });
+
+    await this.albumService.updatePopularity(albumId);
+
+    return review;
   }
 
   edit(reviewId: string, data: EditReviewDto) {

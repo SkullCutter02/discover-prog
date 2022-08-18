@@ -150,7 +150,7 @@ export class ScraperService {
                   trackListing,
                   musicians,
                   imageUrl,
-                  popularity: Math.floor(start / 1000),
+                  popularity: Math.floor(start / 1000) - 5000,
                   albumType: albumType === "Studio Album" ? AlbumType.STUDIO : AlbumType.LIVE,
                   artist: { connect: { numericalId: artistId } },
                   genre: { connect: { name: genreName } },
