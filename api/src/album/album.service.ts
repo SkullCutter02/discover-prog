@@ -90,6 +90,14 @@ export class AlbumService {
     `;
   }
 
+  findMostPopular({ limit, page }: OffsetPaginateDto) {
+    return this.prisma.album.findMany({
+      orderBy: { popularity: "desc" },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+  }
+
   async updatePopularity(albumId: string) {
     const album = await this.findById(albumId);
 

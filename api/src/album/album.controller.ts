@@ -18,6 +18,11 @@ export class AlbumController {
     return this.albumService.findHighestRated(offsetPaginateDto);
   }
 
+  @Get("/most-popular")
+  findMostPopularAlbums(@Query() offsetPaginateDto: OffsetPaginateDto) {
+    return this.albumService.findMostPopular(offsetPaginateDto);
+  }
+
   @Get("/:id")
   getAlbum(
     @Param("id", ParseUUIDPipe) albumId: string,
