@@ -10,6 +10,10 @@ const theme = extendTheme({
     primary: "#412071",
     error: "#bd1717",
   },
+  fonts: {
+    heading: `'Open Sans', sans-serif`,
+    body: `'Open Sans', sans-serif`,
+  },
 });
 
 export default theme;

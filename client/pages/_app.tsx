@@ -7,6 +7,8 @@ import { ChakraProvider } from "@chakra-ui/react";
 
 import theme from "../theme/theme";
 
+import "@fontsource/open-sans";
+
 function MyApp({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());
 
