@@ -2,6 +2,7 @@ import React from "react";
 import { Text } from "@chakra-ui/react";
 import { GetStaticProps } from "next";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
+
 import getMostPopularAlbums from "../features/album/api/getMostPopularAlbums";
 import getTopRatedAlbums from "../features/album/api/getTopRatedAlbums";
 import getRecentReviews from "../features/review/api/getRecentReviews";

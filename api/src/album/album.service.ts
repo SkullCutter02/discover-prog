@@ -75,7 +75,11 @@ export class AlbumService {
 
   findHighestRated({ limit, page }: OffsetPaginateDto) {
     return this.prisma.$queryRaw`
-      SELECT *, dense_rank() OVER (ORDER BY qwr DESC)::int AS rank FROM
+      SELECT albums_with_ratings.*, 
+        a.name AS "artistName", 
+        g.name AS "genreName", 
+        dense_rank() OVER (ORDER BY qwr DESC)::int AS rank 
+      FROM 
         (SELECT albums.*, (sum(r.rating * 
           (SELECT count(*) FROM reviews WHERE reviews."albumId" = albums.id)) / 
           (SELECT count(*) FROM reviews))::decimal(8, 2)::float AS qwr,
@@ -84,6 +88,8 @@ export class AlbumService {
         FROM albums  
         INNER JOIN reviews r on albums.id = r."albumId"
         GROUP BY albums.id) albums_with_ratings 
+      INNER JOIN artists a ON albums_with_ratings."artistId" = a.id
+      INNER JOIN genres g ON albums_with_ratings."genreId" = g.id                                                                     
       ORDER BY rank      
       LIMIT ${limit}
       OFFSET ${(page - 1) * limit}
