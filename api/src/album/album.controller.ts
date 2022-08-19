@@ -19,8 +19,11 @@ export class AlbumController {
   }
 
   @Get("/most-popular")
-  findMostPopularAlbums(@Query() offsetPaginateDto: OffsetPaginateDto) {
-    return this.albumService.findMostPopular(offsetPaginateDto);
+  findMostPopularAlbums(
+    @Query() offsetPaginateDto: OffsetPaginateDto,
+    @Query("include", ParseIncludeQueryPipe) include: Prisma.AlbumInclude
+  ) {
+    return this.albumService.findMostPopular(offsetPaginateDto, include);
   }
 
   @Get("/:id")

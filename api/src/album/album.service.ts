@@ -96,11 +96,12 @@ export class AlbumService {
     `;
   }
 
-  findMostPopular({ limit, page }: OffsetPaginateDto) {
+  findMostPopular({ limit, page }: OffsetPaginateDto, include: Prisma.AlbumInclude) {
     return this.prisma.album.findMany({
       orderBy: { popularity: "desc" },
       skip: (page - 1) * limit,
       take: limit,
+      include,
     });
   }
 
