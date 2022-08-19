@@ -1,7 +1,7 @@
 import { GetServerSidePropsContext } from "next";
 import { QueryClient, dehydrate, DehydratedState } from "@tanstack/react-query";
 
-import User from "../types/user.interface";
+import User from "../features/user/types/user.interface";
 import getMeSsr from "../features/auth/api/getMeSsr";
 
 type AsyncReturnType<T extends (...args: any) => any> = T extends (...args: any) => Promise<infer U>

@@ -3,9 +3,10 @@ import { AxiosAuthRefreshRequestConfig } from "axios-auth-refresh";
 
 import { axios } from "../../../lib/axios";
 import getRefreshTokenSsr from "./getRefreshTokenSsr";
+import User from "../../user/types/user.interface";
 
 const getMeSsr = async (ctx?: GetServerSidePropsContext) => {
-  let user;
+  let user: User;
   let counter = 0;
 
   while (!user && counter <= 1) {
@@ -14,7 +15,7 @@ const getMeSsr = async (ctx?: GetServerSidePropsContext) => {
         headers: { Cookie: ctx.req.headers.cookie },
         skipAuthRefresh: true,
       };
-      const { data } = await axios.get("user/me", axiosConfig);
+      const { data } = await axios.get<User>("user/me", axiosConfig);
       user = data;
     } catch (err) {
       await getRefreshTokenSsr(ctx);
