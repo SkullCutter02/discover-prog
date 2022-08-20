@@ -14,6 +14,19 @@ const theme = extendTheme({
     heading: `'Open Sans', sans-serif`,
     body: `'Open Sans', sans-serif`,
   },
+  textStyles: {
+    "navbar-link": {
+      cursor: "pointer",
+      color: "white",
+      fontSize: 17,
+    },
+    "navbar-link-phone": {
+      cursor: "pointer",
+      color: "white",
+      fontSize: { base: 12, sm: 14 },
+      fontWeight: "bond",
+    },
+  },
 });
 
 export default theme;

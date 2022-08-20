@@ -5,6 +5,8 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Head from "next/head";
 import { ChakraProvider } from "@chakra-ui/react";
 
+import Navbar from "../features/navbar/components/Navbar";
+
 import theme from "../theme/theme";
 
 import "@fontsource/open-sans";
@@ -19,6 +21,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <title>Discover Prog</title>
         </Head>
         <ChakraProvider theme={theme}>
+          <Navbar />
           <Component {...pageProps} />
         </ChakraProvider>
       </Hydrate>
