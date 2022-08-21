@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Prisma } from "@prisma/client";
+import { AlbumType, Prisma } from "@prisma/client";
 
 import { PrismaService } from "../prisma/prisma.service";
 import { EditAlbumDto } from "./dto/editAlbum.dto";
@@ -93,6 +93,19 @@ export class AlbumService {
       ORDER BY rank      
       LIMIT ${limit}
       OFFSET ${(page - 1) * limit}
+    `;
+  }
+
+  findArtistAlbums(artistId: string, albumType: AlbumType) {
+    return this.prisma.$queryRaw`
+      SELECT albums.*, 
+        cast(avg(r.rating) AS decimal(8, 2))::float AS "avgRating",
+        count(r)::int AS "numOfReviews"
+      FROM albums
+      LEFT JOIN reviews r on albums.id = r."albumId"         
+      WHERE "artistId" = ${artistId} AND "albumType"::text = ${albumType.toString()}
+      GROUP BY albums.id, "releaseYear"
+      ORDER BY "releaseYear"
     `;
   }
 

@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Query, UseGuards } from "@nestjs/common";
-import { Prisma, Role } from "@prisma/client";
+import { AlbumType, Prisma, Role } from "@prisma/client";
 
 import { ParseIncludeQueryPipe } from "../pipes/parseIncludeQuery.pipe";
 import { AlbumService } from "./album.service";
@@ -37,6 +37,11 @@ export class AlbumController {
   @Get("/:id/ranking")
   getAlbumRanking(@Param("id", ParseUUIDPipe) albumId: string) {
     return this.albumService.findRanking(albumId);
+  }
+
+  @Get("/artist/:id")
+  getArtistAlbums(@Param("id", ParseUUIDPipe) artistId: string, @Query("type") albumType: AlbumType) {
+    return this.albumService.findArtistAlbums(artistId, albumType);
   }
 
   @Patch("/:id")
