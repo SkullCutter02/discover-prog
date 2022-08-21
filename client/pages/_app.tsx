@@ -9,7 +9,7 @@ import Navbar from "../features/navbar/components/Navbar";
 
 import theme from "../theme/theme";
 
-import "@fontsource/open-sans";
+import "../theme/style.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());

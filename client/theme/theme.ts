@@ -27,6 +27,12 @@ const theme = extendTheme({
       fontWeight: "bond",
     },
   },
+  layerStyles: {
+    "page-container": {
+      py: 14,
+      px: { base: 5, md: 10 },
+    },
+  },
 });
 
 export default theme;

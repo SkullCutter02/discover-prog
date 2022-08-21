@@ -19,7 +19,7 @@ const Navbar: React.FC = () => {
           color={"white"}
           cursor={"pointer"}
           fontSize={{ base: 15, sm: 16, md: 18 }}
-          fontWeight={800}
+          fontWeight={700}
           mx={{ base: 2, md: 6 }}
         >
           Discover Prog
