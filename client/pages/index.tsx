@@ -10,7 +10,7 @@ import AlbumPreviewHome from "../features/album/components/AlbumPreviewHome";
 import ReviewPreviewHome from "../features/review/components/ReviewPreviewHome";
 
 const HomePage: React.FC = () => {
-  const { data: popularAlbums } = useQuery(["popular-albums", "home"], () => getMostPopularAlbums(1, 1));
+  const { data: popularAlbums } = useQuery(["popular-albums", "home"], () => getMostPopularAlbums(1, 5));
   const { data: topAlbums } = useQuery(["top-albums", "home"], () => getTopRatedAlbums(1, 5));
   const { data: recentReviews } = useQuery(["latest-reviews", "home"], () => getRecentReviews(1, 10));
 
@@ -38,7 +38,7 @@ const HomePage: React.FC = () => {
           as={"aside"}
           w={{ base: "full", md: "38%" }}
         >
-          <Box>
+          <Box overflowX={{ base: "scroll", md: "initial" }}>
             <Heading
               as={"h2"}
               fontSize={{ base: 17, md: 20 }}
@@ -46,12 +46,16 @@ const HomePage: React.FC = () => {
               textTransform={"uppercase"}
               my={5}
             >
-              Most popular album{" "}
+              Top 5 most popular albums{" "}
               <Box as={"span"} textTransform={"initial"}>
                 (last 24h)
               </Box>
             </Heading>
-            <AlbumPreviewHome album={popularAlbums[0]} />
+            <Stack mt={5} direction={{ base: "row", md: "column" }} spacing={5}>
+              {popularAlbums.map((album) => (
+                <AlbumPreviewHome key={album.id} album={album} />
+              ))}
+            </Stack>
           </Box>
 
           <Box overflowX={{ base: "scroll", md: "initial" }}>
@@ -62,7 +66,7 @@ const HomePage: React.FC = () => {
               textTransform={"uppercase"}
               mt={{ base: 0, md: 10 }}
             >
-              Top 5 prog rock albums
+              Top 5 prog rock albums of all time
             </Heading>
             <Stack mt={5} direction={{ base: "row", md: "column" }} spacing={5}>
               {topAlbums.map((album) => (
@@ -79,9 +83,9 @@ const HomePage: React.FC = () => {
 export const getStaticProps: GetStaticProps = async () => {
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery(["latest-reviews", "home"], () => getRecentReviews(1, 10));
+  await queryClient.prefetchQuery(["popular-albums", "home"], () => getMostPopularAlbums(1, 5));
   await queryClient.prefetchQuery(["top-albums", "home"], () => getTopRatedAlbums(1, 5));
-  await queryClient.prefetchQuery(["popular-albums", "home"], () => getMostPopularAlbums(1, 1));
+  await queryClient.prefetchQuery(["latest-reviews", "home"], () => getRecentReviews(1, 10));
 
   return {
     props: {
