@@ -1,6 +1,7 @@
 import React from "react";
-import Album from "../../album/types/album.interface";
 import { AspectRatio, Box, Image, Text, Flex } from "@chakra-ui/react";
+
+import Album from "../../album/types/album.interface";
 
 interface Props {
   album: Album;
@@ -21,10 +22,11 @@ const ReviewAlbumCard: React.FC<Props> = ({ album }) => {
             textDecoration={"underline"}
             cursor={"pointer"}
             fontWeight={600}
+            textAlign={"center"}
           >
             {album.name}
           </Text>
-          <Text mt={0.5} fontSize={13}>
+          <Text mt={0.5} fontSize={13} textAlign={"center"}>
             by{" "}
             <Box as={"span"} textTransform={"uppercase"} textDecoration={"underline"} cursor={"pointer"}>
               {album.artist.name}
