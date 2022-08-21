@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, HStack, Image, Text, AspectRatio } from "@chakra-ui/react";
+import { Box, Image, Text, AspectRatio, Stack } from "@chakra-ui/react";
 
 import Album from "../types/album.interface";
 import TopRatedAlbum from "../types/topRatedAlbum.interface";
@@ -11,14 +11,20 @@ interface Props {
 const AlbumPreviewHome: React.FC<Props> = ({ album }) => {
   return (
     <>
-      <HStack w={"100%"} align={"flex-start"} spacing={5} mt={5}>
-        <AspectRatio w={"35%"} ratio={1}>
+      <Stack
+        direction={{ base: "column", md: "row" }}
+        minW={{ base: "150px", md: "initial" }}
+        w={{ base: "150px", md: "100%" }}
+        align={"flex-start"}
+        spacing={5}
+      >
+        <AspectRatio w={{ base: "full", md: "35%" }} ratio={1}>
           <Image src={`https://www.progarchives.com/${album.imageUrl}`} />
         </AspectRatio>
-        <Box w={"65%"}>
+        <Box w={{ base: "full", md: "65%" }}>
           <Text
             color={"primary"}
-            fontSize={18.5}
+            fontSize={{ base: 14, md: 16, lg: 18 }}
             cursor={"pointer"}
             fontWeight={600}
             textDecoration={"underline"}
@@ -36,7 +42,7 @@ const AlbumPreviewHome: React.FC<Props> = ({ album }) => {
             {"genre" in album ? album?.genre.name : "genreName" in album ? album.genreName : null}
           </Text>
         </Box>
-      </HStack>
+      </Stack>
     </>
   );
 };

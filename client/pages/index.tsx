@@ -16,8 +16,13 @@ const HomePage: React.FC = () => {
 
   return (
     <>
-      <Stack as={"main"} spacing={10} direction={"row"} layerStyle={"page-container"}>
-        <Box as={"div"} w={"62%"}>
+      <Stack
+        as={"main"}
+        spacing={10}
+        direction={{ base: "column-reverse", md: "row" }}
+        layerStyle={"page-container"}
+      >
+        <Box as={"div"} w={{ base: "full", md: "62%" }}>
           <Heading fontSize={24} fontWeight={700}>
             Latest Prog Rock Reviews
           </Heading>
@@ -26,22 +31,46 @@ const HomePage: React.FC = () => {
             <ReviewPreviewHome review={review} key={review.id} />
           ))}
         </Box>
-        <Box as={"aside"} w={"38%"}>
-          <Heading as={"h2"} fontSize={20} fontWeight={700} textTransform={"uppercase"} mt={5}>
-            Most popular album{" "}
-            <Box as={"span"} textTransform={"initial"}>
-              (last 24h)
-            </Box>
-          </Heading>
-          <AlbumPreviewHome album={popularAlbums[0]} />
 
-          <Heading as={"h2"} fontSize={20} fontWeight={700} textTransform={"uppercase"} mt={10}>
-            Top 5 prog rock albums
-          </Heading>
-          {topAlbums.map((album) => (
-            <AlbumPreviewHome key={album.id} album={album} />
-          ))}
-        </Box>
+        <Stack
+          direction={{ base: "column-reverse", md: "column" }}
+          justify={"flex-start"}
+          as={"aside"}
+          w={{ base: "full", md: "38%" }}
+        >
+          <Box>
+            <Heading
+              as={"h2"}
+              fontSize={{ base: 17, md: 20 }}
+              fontWeight={700}
+              textTransform={"uppercase"}
+              my={5}
+            >
+              Most popular album{" "}
+              <Box as={"span"} textTransform={"initial"}>
+                (last 24h)
+              </Box>
+            </Heading>
+            <AlbumPreviewHome album={popularAlbums[0]} />
+          </Box>
+
+          <Box overflowX={{ base: "scroll", md: "initial" }}>
+            <Heading
+              as={"h2"}
+              fontSize={{ base: 17, md: 20 }}
+              fontWeight={700}
+              textTransform={"uppercase"}
+              mt={{ base: 0, md: 10 }}
+            >
+              Top 5 prog rock albums
+            </Heading>
+            <Stack mt={5} direction={{ base: "row", md: "column" }} spacing={5}>
+              {topAlbums.map((album) => (
+                <AlbumPreviewHome key={album.id} album={album} />
+              ))}
+            </Stack>
+          </Box>
+        </Stack>
       </Stack>
     </>
   );
