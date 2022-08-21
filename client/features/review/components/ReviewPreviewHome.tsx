@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Flex, HStack, Text } from "@chakra-ui/react";
-import { FaStar } from "react-icons/fa";
 
+import Star from "../../../components/widgets/Star";
 import Review from "../types/review.interface";
 import ReviewAlbumCard from "./ReviewAlbumCard";
 
@@ -22,7 +22,7 @@ const ReviewPreviewHome: React.FC<Props> = ({ review }) => {
             {Array(5)
               .fill("")
               .map((_, i) => (
-                <FaStar key={review.id + review.user.id + i} color={i < review.rating ? "#ffce31" : "gray"} />
+                <Star key={review.id + review.user.id + i} isFilled={i < review.rating} />
               ))}
           </HStack>
         </Flex>
