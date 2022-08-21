@@ -12,33 +12,11 @@ const NavbarLinksPhone: React.FC = () => {
         display={{ base: "grid", md: "none" }}
         borderBottom={"1px solid #747474"}
       >
-        <Text
-          h={"full"}
-          textStyle={"navbar-link-phone"}
-          textAlign={"center"}
-          borderRight={"1px solid #747474"}
-        >
-          <Center h={"full"}>Genres</Center>
-        </Text>
-        <Text
-          h={"full"}
-          textStyle={"navbar-link-phone"}
-          textAlign={"center"}
-          borderRight={"1px solid #747474"}
-        >
-          <Center h={"full"}>Popular Albums</Center>
-        </Text>
-        <Text
-          h={"full"}
-          textStyle={"navbar-link-phone"}
-          textAlign={"center"}
-          borderRight={"1px solid #747474"}
-        >
-          <Center h={"full"}>Top Albums</Center>
-        </Text>
-        <Text h={"full"} textStyle={"navbar-link-phone"} textAlign={"center"}>
-          <Center h={"full"}>A-Z</Center>
-        </Text>
+        {["Genres", "Popular Albums", "Top Albums", "A-Z"].map((section) => (
+          <Center h={"full"} borderRight={"1px solid #747474"} key={section}>
+            <Text textStyle={"navbar-link-phone"}>{section}</Text>
+          </Center>
+        ))}
       </SimpleGrid>
     </>
   );
