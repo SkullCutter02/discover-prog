@@ -8,6 +8,7 @@ import getTopRatedAlbums from "../features/album/api/getTopRatedAlbums";
 import getRecentReviews from "../features/review/api/getRecentReviews";
 import AlbumPreviewHome from "../features/album/components/AlbumPreviewHome";
 import ReviewPreviewHome from "../features/review/components/ReviewPreviewHome";
+import AlbumsHomeContainer from "../features/album/components/AlbumsHomeContainer";
 
 const HomePage: React.FC = () => {
   const { data: popularAlbums } = useQuery(["popular-albums", "home"], () => getMostPopularAlbums(1, 5));
@@ -38,7 +39,7 @@ const HomePage: React.FC = () => {
           as={"aside"}
           w={{ base: "full", md: "38%" }}
         >
-          <Box overflowX={{ base: "scroll", md: "initial" }}>
+          <AlbumsHomeContainer albums={popularAlbums}>
             <Heading
               as={"h2"}
               fontSize={{ base: 17, md: 20 }}
@@ -51,14 +52,9 @@ const HomePage: React.FC = () => {
                 (last 24h)
               </Box>
             </Heading>
-            <Stack mt={5} direction={{ base: "row", md: "column" }} spacing={5}>
-              {popularAlbums.map((album) => (
-                <AlbumPreviewHome key={album.id} album={album} />
-              ))}
-            </Stack>
-          </Box>
+          </AlbumsHomeContainer>
 
-          <Box overflowX={{ base: "scroll", md: "initial" }}>
+          <AlbumsHomeContainer albums={topAlbums}>
             <Heading
               as={"h2"}
               fontSize={{ base: 17, md: 20 }}
@@ -68,12 +64,7 @@ const HomePage: React.FC = () => {
             >
               Top 5 prog rock albums of all time
             </Heading>
-            <Stack mt={5} direction={{ base: "row", md: "column" }} spacing={5}>
-              {topAlbums.map((album) => (
-                <AlbumPreviewHome key={album.id} album={album} />
-              ))}
-            </Stack>
-          </Box>
+          </AlbumsHomeContainer>
         </Stack>
       </Stack>
     </>
