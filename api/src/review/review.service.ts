@@ -77,6 +77,7 @@ export class ReviewService {
 
   findLatest({ limit, page }: OffsetPaginateDto, include: Prisma.ReviewInclude) {
     return this.prisma.review.findMany({
+      where: { NOT: { body: null } },
       orderBy: { createdAt: "desc" },
       take: limit,
       skip: (page - 1) * limit,
