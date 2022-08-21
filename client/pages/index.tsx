@@ -7,10 +7,12 @@ import getMostPopularAlbums from "../features/album/api/getMostPopularAlbums";
 import getTopRatedAlbums from "../features/album/api/getTopRatedAlbums";
 import getRecentReviews from "../features/review/api/getRecentReviews";
 import AlbumPreviewHome from "../features/album/components/AlbumPreviewHome";
+import ReviewPreviewHome from "../features/review/components/ReviewPreviewHome";
 
 const HomePage: React.FC = () => {
   const { data: popularAlbums } = useQuery(["popular-albums", "home"], () => getMostPopularAlbums(1, 1));
   const { data: topAlbums } = useQuery(["top-albums", "home"], () => getTopRatedAlbums(1, 5));
+  const { data: recentReviews } = useQuery(["latest-reviews", "home"], () => getRecentReviews(1, 10));
 
   return (
     <>
@@ -20,6 +22,9 @@ const HomePage: React.FC = () => {
             Latest Prog Rock Reviews
           </Heading>
           <Box as={"div"} w={"full"} h={"2.5px"} bg={"black"} mt={3} />
+          {recentReviews.map((review) => (
+            <ReviewPreviewHome review={review} key={review.id} />
+          ))}
         </Box>
         <Box as={"aside"} w={"38%"}>
           <Heading as={"h2"} fontSize={20} fontWeight={700} textTransform={"uppercase"} mt={5}>
