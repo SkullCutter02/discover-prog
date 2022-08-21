@@ -1,4 +1,4 @@
-import Base from "./base.interface";
+import Base from "../../../types/base.interface";
 import Role from "./role.enum";
 
 export default interface User extends Base {
