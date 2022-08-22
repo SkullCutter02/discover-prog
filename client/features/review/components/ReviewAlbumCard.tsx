@@ -10,30 +10,38 @@ interface Props {
 const ReviewAlbumCard: React.FC<Props> = ({ album }) => {
   return (
     <>
-      <Box float={"left"} bg={"white"} p={3} w={"30%"} mr={4}>
-        <AspectRatio w={"full"} ratio={1}>
+      <Flex
+        float={{ base: "initial", sm: "left" }}
+        w={{ base: "full", sm: "30%" }}
+        flexDir={{ base: "row", sm: "column" }}
+        bg={"white"}
+        p={3}
+        mr={4}
+        mb={{ base: 4, sm: 0 }}
+      >
+        <AspectRatio w={{ base: "40%", sm: "full" }} ratio={1}>
           <Image src={`https://www.progarchives.com/${album.imageUrl}`} />
         </AspectRatio>
-        <Flex flexDir={"column"} align={"center"}>
+        <Box w={"full"} ml={{ base: 3, sm: 0 }}>
           <Text
-            fontSize={14}
-            mt={2}
+            fontSize={{ base: 15, sm: 14 }}
+            mt={{ base: 0, sm: 2 }}
             color={"primary"}
             textDecoration={"underline"}
             cursor={"pointer"}
             fontWeight={600}
-            textAlign={"center"}
+            textAlign={{ base: "start", sm: "center" }}
           >
             {album.name}
           </Text>
-          <Text mt={0.5} fontSize={13} textAlign={"center"}>
+          <Text mt={0.5} fontSize={13} textAlign={{ base: "start", sm: "center" }}>
             by{" "}
             <Box as={"span"} textTransform={"uppercase"} textDecoration={"underline"} cursor={"pointer"}>
               {album.artist.name}
             </Box>
           </Text>
-        </Flex>
-      </Box>
+        </Box>
+      </Flex>
     </>
   );
 };
