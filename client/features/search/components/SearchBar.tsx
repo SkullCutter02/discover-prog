@@ -21,6 +21,7 @@ const SearchBar: React.FC = () => {
           placeholder={"Search your favourite artists or albums..."}
           borderRadius={"100px"}
           h={"full"}
+          fontSize={{ base: 15, md: 16 }}
         />
       </InputGroup>
     </>
