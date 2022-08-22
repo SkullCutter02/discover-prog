@@ -26,6 +26,10 @@ const theme = extendTheme({
       fontSize: { base: 12, sm: 14 },
       fontWeight: "bond",
     },
+    error: {
+      color: "#bd1717",
+      fontSize: 15,
+    },
   },
   layerStyles: {
     "page-container": {

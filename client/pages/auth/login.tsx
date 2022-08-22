@@ -60,7 +60,11 @@ const LoginPage: React.FC = () => {
             >
               Login
             </Button>
-            {isError && <Text textStyle={"error"}>{(error as any).response.data.message}</Text>}
+            {isError && (
+              <Text textStyle={"error"} mt={3}>
+                {(error as any).response.data.message}
+              </Text>
+            )}
           </form>
         </Box>
       </Center>
