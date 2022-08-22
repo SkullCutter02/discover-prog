@@ -26,8 +26,6 @@ const LoginPage: React.FC = () => {
 
   const { isLoading, isError, error, mutate } = useLogin();
 
-  console.log(error);
-
   return (
     <>
       <Center minH={{ base: "calc(100vh - 105px)", md: "calc(100vh - 80px)" }} w={"50%"} mx={"auto"}>
