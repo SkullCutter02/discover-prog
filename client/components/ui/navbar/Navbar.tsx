@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { Button, Flex, Text } from "@chakra-ui/react";
 
 import SearchBar from "../../../features/search/components/SearchBar";
@@ -24,19 +25,24 @@ const Navbar: React.FC = () => {
         >
           Discover Prog
         </Text>
+
         <SearchBar />
+
         <NavbarLinks />
-        <Button
-          bg={"#31135b"}
-          _hover={{ bg: "#1c0838" }}
-          _active={{ bg: "#2a0a54" }}
-          textColor={"white"}
-          fontSize={{ base: 12, sm: 14, md: 18 }}
-          mx={{ base: 2, md: 6 }}
-          borderRadius={"30px"}
-        >
-          Sign In
-        </Button>
+
+        <Link href={"/auth/login"}>
+          <Button
+            bg={"#31135b"}
+            _hover={{ bg: "#1c0838" }}
+            _active={{ bg: "#2a0a54" }}
+            textColor={"white"}
+            fontSize={{ base: 12, sm: 14, md: 18 }}
+            mx={{ base: 2, md: 6 }}
+            borderRadius={"30px"}
+          >
+            Sign In
+          </Button>
+        </Link>
       </Flex>
       <NavbarLinksPhone />
     </>
