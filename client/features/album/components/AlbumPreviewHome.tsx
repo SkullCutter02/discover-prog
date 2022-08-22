@@ -32,13 +32,13 @@ const AlbumPreviewHome: React.FC<Props> = ({ album }) => {
           >
             {album.name}
           </Text>
-          <Text fontSize={15}>
+          <Text fontSize={{ base: 13, md: 15 }}>
             by{" "}
             <Box as={"span"} textTransform={"uppercase"}>
               {"artist" in album ? album?.artist.name : "artistName" in album ? album.artistName : null}
             </Box>
           </Text>
-          <Text fontSize={16} mt={1} color={"gray.500"}>
+          <Text fontSize={{ base: 13, md: 15 }} mt={1} color={"gray.500"}>
             {"genre" in album ? album?.genre.name : "genreName" in album ? album.genreName : null}
           </Text>
         </Box>
