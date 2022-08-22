@@ -1,6 +1,7 @@
 import React from "react";
 import {
   FormControl,
+  FormControlProps,
   FormErrorMessage,
   FormErrorMessageProps,
   FormLabel,
@@ -20,6 +21,7 @@ interface Props {
   };
   inputProps?: InputProps;
   labelProps?: FormLabelProps;
+  controlProps?: FormControlProps;
   errorMessageProps?: FormErrorMessageProps;
 }
 
@@ -31,10 +33,11 @@ const TextInputControl: React.FC<Props> = ({
   register,
   inputProps,
   labelProps,
+  controlProps,
   errorMessageProps,
 }) => {
   return (
-    <FormControl isRequired={isRequired} isInvalid={!!error?.message}>
+    <FormControl isRequired={isRequired} isInvalid={!!error?.message} {...controlProps}>
       <FormLabel htmlFor={name} {...labelProps}>
         {label}
       </FormLabel>
