@@ -6,7 +6,9 @@ import ReviewPreviewHome from "../../../features/review/components/ReviewPreview
 import getRecentReviews from "../../../features/review/api/getRecentReviews";
 
 const MainHomeSection: React.FC = () => {
-  const { data: recentReviews } = useQuery(["latest-reviews", "home"], () => getRecentReviews(1, 10));
+  const { data: recentReviews } = useQuery(["latest-reviews", "home"], () => getRecentReviews(1, 10), {
+    enabled: false,
+  });
 
   return (
     <>

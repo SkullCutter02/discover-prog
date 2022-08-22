@@ -7,8 +7,12 @@ import getMostPopularAlbums from "../../../features/album/api/getMostPopularAlbu
 import getTopRatedAlbums from "../../../features/album/api/getTopRatedAlbums";
 
 const AsideHomeSection: React.FC = () => {
-  const { data: popularAlbums } = useQuery(["popular-albums", "home"], () => getMostPopularAlbums(1, 5));
-  const { data: topAlbums } = useQuery(["top-albums", "home"], () => getTopRatedAlbums(1, 5));
+  const { data: popularAlbums } = useQuery(["popular-albums", "home"], () => getMostPopularAlbums(1, 5), {
+    enabled: false,
+  });
+  const { data: topAlbums } = useQuery(["top-albums", "home"], () => getTopRatedAlbums(1, 5), {
+    enabled: false,
+  });
 
   return (
     <>
