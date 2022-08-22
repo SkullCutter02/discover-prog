@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Flex, Text } from "@chakra-ui/react";
 
-import SearchBar from "../../search/components/SearchBar";
+import SearchBar from "../../../features/search/components/SearchBar";
 import NavbarLinks from "./NavbarLinks";
 import NavbarLinksPhone from "./NavbarLinksPhone";
 
