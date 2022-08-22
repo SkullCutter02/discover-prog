@@ -15,7 +15,7 @@ const getMeSsr = async (ctx?: GetServerSidePropsContext) => {
         headers: { Cookie: ctx.req.headers.cookie },
         skipAuthRefresh: true,
       };
-      const { data } = await axios.get<User>("user/me", axiosConfig);
+      const { data } = await axios.get<User>("auth/me", axiosConfig);
       user = data;
     } catch (err) {
       await getRefreshTokenSsr(ctx);
