@@ -16,8 +16,8 @@ export class SearchService {
           WHEN type = 'artist' THEN (unaccent(name) <-> ${query}) * 1000
           WHEN type = 'album' THEN
             CASE
-              WHEN review_count <> 0 IS FALSE THEN ((unaccent(name) <-> ${query})) * 1000
-              WHEN review_count <> 0 IS TRUE THEN ((unaccent(name) <-> ${query})) * 1000 - log(review_count)  
+              WHEN review_count <> 0 IS FALSE THEN ((unaccent(name) <-> ${query}) + 0.002) * 1000
+              WHEN review_count <> 0 IS TRUE THEN ((unaccent(name) <-> ${query}) + 0.002) * 1000 - log(review_count)  
             END
         END
       ) AS rank
