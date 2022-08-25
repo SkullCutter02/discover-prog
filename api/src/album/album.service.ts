@@ -122,7 +122,7 @@ export class AlbumService {
     const album = await this.findById(albumId);
 
     const currentEpochTime = Math.floor(Date.now() / 1000);
-    const newPopularity = (album.popularity + currentEpochTime) / 2;
+    const newPopularity = Math.floor((album.popularity + currentEpochTime) / 2);
 
     return this.prisma.album.update({
       where: { id: albumId },
