@@ -1,6 +1,6 @@
 import React from "react";
 import { withAuthServerSideProps } from "../hoc/withAuthServerSideProps";
-import { dehydrate, QueryClient } from "@tanstack/react-query";
+import { dehydrate } from "@tanstack/react-query";
 import getSearchResults from "../features/search/api/getSearchResults";
 
 const SearchPage: React.FC = () => {
