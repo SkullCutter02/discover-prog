@@ -7,6 +7,7 @@ interface ArtistSearchResult extends Artist {
 
 interface AlbumSearchResult extends Album {
   type: "album";
+  artist_name: string;
 }
 
 type SearchResult = (ArtistSearchResult | AlbumSearchResult) & { rank: number };
