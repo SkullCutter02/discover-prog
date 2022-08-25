@@ -1,6 +1,6 @@
 import React from "react";
 import { dehydrate, useQuery } from "@tanstack/react-query";
-import { Box, Heading, Divider } from "@chakra-ui/react";
+import { Box, Heading, Divider, Button, ButtonGroup } from "@chakra-ui/react";
 
 import { withAuthServerSideProps } from "../hoc/withAuthServerSideProps";
 import getSearchResults from "../features/search/api/getSearchResults";
@@ -27,6 +27,14 @@ const SearchPage: React.FC = () => {
         {results.map((result) => (
           <Result result={result} key={result.id} />
         ))}
+        <ButtonGroup display={"flex"} justifyContent={"flex-end"} mt={10} variant={"outline"} spacing={6}>
+          <Button colorScheme={"blue"} onClick={() => router.push(`/search?q=${query}&page=${page - 1}`)}>
+            Previous Page
+          </Button>
+          <Button colorScheme={"purple"} onClick={() => router.push(`/search?q=${query}&page=${page + 1}`)}>
+            Next Page
+          </Button>
+        </ButtonGroup>
       </Box>
     </>
   );
@@ -37,7 +45,7 @@ export const getServerSideProps = withAuthServerSideProps(
     const query = ctx.query.q as string;
     const page = parseInt(ctx.query.page as string);
 
-    await queryClient.prefetchQuery(["search", query, 1], () => getSearchResults(query, page));
+    await queryClient.prefetchQuery(["search", query, page], () => getSearchResults(query, page));
 
     return {
       props: {
