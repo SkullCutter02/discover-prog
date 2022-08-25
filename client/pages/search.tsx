@@ -1,10 +1,10 @@
 import React from "react";
 import { dehydrate, useQuery } from "@tanstack/react-query";
 import { Box, Heading, Divider, Button, ButtonGroup } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
 import { withAuthServerSideProps } from "../hoc/withAuthServerSideProps";
 import getSearchResults from "../features/search/api/getSearchResults";
-import { useRouter } from "next/router";
 import Result from "../features/search/components/Result";
 
 const SearchPage: React.FC = () => {
