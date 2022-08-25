@@ -39,7 +39,7 @@ export class ReviewService {
       where: { albumId, userId },
     });
 
-    if (count > 1) throw new ConflictException("User has already created a review for this album");
+    if (count >= 1) throw new ConflictException("User has already created a review for this album");
 
     const review = await this.prisma.review.create({
       data: {
