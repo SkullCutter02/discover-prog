@@ -31,7 +31,11 @@ type DefaultWithAuthServerSideProps = {
 };
 
 function withAuthServerSideProps<T extends EmptyProps = EmptyProps>(
-  getServerSidePropsFunc?: (ctx: GetServerSidePropsContext, user?: User) => Promise<T>,
+  getServerSidePropsFunc?: (
+    ctx: GetServerSidePropsContext,
+    user?: User,
+    queryClient?: QueryClient
+  ) => Promise<T>,
   options: WithAuthServerSidePropsOptions = { authenticatedPage: true, redirectIfUserExists: false }
 ) {
   return async function getMergedServerSideProps(
@@ -72,7 +76,7 @@ function withAuthServerSideProps<T extends EmptyProps = EmptyProps>(
       return {
         props: {
           dehydratedState: dehydrate(queryClient),
-          ...((await getServerSidePropsFunc(ctx, loggedInUser)).props || {}),
+          ...((await getServerSidePropsFunc(ctx, loggedInUser, queryClient)).props || {}),
         },
       };
     }
