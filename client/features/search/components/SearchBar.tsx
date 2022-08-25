@@ -2,7 +2,14 @@ import React from "react";
 import { Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
 import { AiOutlineSearch } from "react-icons/ai";
 
+import useSearch from "../hooks/useSearch";
+import useSearchQuery from "../hooks/useSearchQuery";
+
 const SearchBar: React.FC = () => {
+  const [searchQuery, setSearchQuery] = useSearchQuery();
+
+  const startSearch = useSearch(searchQuery);
+
   return (
     <>
       <InputGroup
@@ -15,6 +22,7 @@ const SearchBar: React.FC = () => {
         <InputLeftElement
           h={"full"}
           children={<AiOutlineSearch cursor={"pointer"} size={"25px"} color={"#80728f"} />}
+          onClick={startSearch}
         />
         <Input
           bg={"#d6cde4"}
@@ -22,6 +30,11 @@ const SearchBar: React.FC = () => {
           borderRadius={"100px"}
           h={"full"}
           fontSize={{ base: 15, md: 16 }}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={async (e) => {
+            if (e.key === "Enter") await startSearch();
+          }}
         />
       </InputGroup>
     </>
