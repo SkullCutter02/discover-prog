@@ -12,7 +12,7 @@ const SearchPage: React.FC = () => {
   const query = router.query.q as string;
   const page = parseInt(router.query.page as string);
 
-  const { data: results } = useQuery(["search", query, page], () => getSearchResults(query, page));
+  const { data: results, isError } = useQuery(["search", query, page], () => getSearchResults(query, page));
 
   return (
     <>
@@ -24,14 +24,26 @@ const SearchPage: React.FC = () => {
           search results
         </Heading>
         <Divider my={6} />
-        {results.map((result) => (
-          <Result result={result} key={result.id} />
-        ))}
+
+        {!isError && results && results.length !== 0 ? (
+          results.map((result) => <Result result={result} key={result.id} />)
+        ) : (
+          <p>This search yielded in 0 results</p>
+        )}
+
         <ButtonGroup display={"flex"} justifyContent={"flex-end"} mt={10} variant={"outline"} spacing={6}>
-          <Button colorScheme={"blue"} onClick={() => router.push(`/search?q=${query}&page=${page - 1}`)}>
+          <Button
+            disabled={page <= 1}
+            colorScheme={"blue"}
+            onClick={() => router.push(`/search?q=${query}&page=${page - 1}`)}
+          >
             Previous Page
           </Button>
-          <Button colorScheme={"purple"} onClick={() => router.push(`/search?q=${query}&page=${page + 1}`)}>
+          <Button
+            disabled={isError || results?.length === 0 || results.length < 20}
+            colorScheme={"purple"}
+            onClick={() => router.push(`/search?q=${query}&page=${page + 1}`)}
+          >
             Next Page
           </Button>
         </ButtonGroup>
