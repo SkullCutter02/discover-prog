@@ -13,22 +13,23 @@ export class SearchService {
     return this.prisma.$queryRaw`
       SELECT *, (
         CASE 
-          WHEN type = 'artist' THEN (unaccent(name) <-> ${query})
+          WHEN type = 'artist' THEN (unaccent(name) <-> ${query}) * 1000
           WHEN type = 'album' THEN
             CASE
-              WHEN unaccent(artist_name) <-> ${query} < 0.5 THEN (unaccent(artist_name) <-> ${query}) + 0.01
-              WHEN unaccent(artist_name) <-> ${query} >= 0.5 THEN (unaccent(name) <-> ${query}) + 0.05
+              WHEN review_count <> 0 IS FALSE THEN ((unaccent(name) <-> ${query})) * 1000
+              WHEN review_count <> 0 IS TRUE THEN ((unaccent(name) <-> ${query})) * 1000 - log(review_count)  
             END
         END
       ) AS rank
       FROM
         (SELECT 'artist' AS type, artists.* FROM artists) artists
           NATURAL FULL JOIN
-        (SELECT 'album' AS type, albums.*, a.name AS artist_name FROM albums
-          INNER JOIN artists a on albums."artistId" = a.id) albums
+        (SELECT 'album' AS type, albums.*, a.name AS artist_name, count(r)::int AS review_count FROM albums
+          INNER JOIN artists a on albums."artistId" = a.id
+          LEFT JOIN reviews r on albums.id = r."albumId"
+          GROUP BY albums.id, a.name) albums
       WHERE unaccent(name) ILIKE ${ilike} 
        OR (unaccent(name) <-> ${query}) < 0.7
-       OR (unaccent(artist_name) <% ${query}) IS TRUE
       ORDER BY rank, "releaseYear" 
       LIMIT ${limit}
       OFFSET ${(page - 1) * limit}
