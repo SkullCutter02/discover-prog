@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { Flex, Text } from "@chakra-ui/react";
 
 import SearchBar from "../../../features/search/components/SearchBar";
@@ -16,15 +17,17 @@ const Navbar: React.FC = () => {
         bg={"primary"}
         boxShadow={{ base: "dark-lg", md: "xl" }}
       >
-        <Text
-          color={"white"}
-          cursor={"pointer"}
-          fontSize={{ base: 15, sm: 16, md: 18 }}
-          fontWeight={700}
-          mx={{ base: 2, md: 6 }}
-        >
-          Discover Prog
-        </Text>
+        <Link href={"/"}>
+          <Text
+            color={"white"}
+            cursor={"pointer"}
+            fontSize={{ base: 15, sm: 16, md: 18 }}
+            fontWeight={700}
+            mx={{ base: 2, md: 6 }}
+          >
+            Discover Prog
+          </Text>
+        </Link>
         <SearchBar />
         <NavbarLinks />
         <NavbarUser />
