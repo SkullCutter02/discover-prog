@@ -26,6 +26,11 @@ export class AlbumController {
     return this.albumService.findMostPopular(offsetPaginateDto, include);
   }
 
+  @Get("/ids")
+  getAlbumIds() {
+    return this.albumService.findAlbumIds();
+  }
+
   @Get("/:id")
   getAlbum(
     @Param("id", ParseUUIDPipe) albumId: string,
