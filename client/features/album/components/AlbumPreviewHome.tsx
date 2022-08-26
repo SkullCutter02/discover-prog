@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Image, Text, AspectRatio, Stack } from "@chakra-ui/react";
+import Link from "next/link";
 
 import Album from "../types/album.interface";
 import TopRatedAlbum from "../types/topRatedAlbum.interface";
@@ -22,16 +23,18 @@ const AlbumPreviewHome: React.FC<Props> = ({ album }) => {
           <Image src={`https://www.progarchives.com/${album.imageUrl}`} />
         </AspectRatio>
         <Box w={{ base: "full", md: "65%" }}>
-          <Text
-            color={"primary"}
-            fontSize={{ base: 14, md: 16, lg: 18 }}
-            cursor={"pointer"}
-            fontWeight={600}
-            textDecoration={"underline"}
-            display={"inline-block"}
-          >
-            {album.name}
-          </Text>
+          <Link href={`/album/${album.id}`}>
+            <Text
+              color={"primary"}
+              fontSize={{ base: 14, md: 16, lg: 18 }}
+              cursor={"pointer"}
+              fontWeight={600}
+              textDecoration={"underline"}
+              display={"inline-block"}
+            >
+              {album.name}
+            </Text>
+          </Link>
           <Text fontSize={{ base: 13, md: 15 }}>
             by{" "}
             <Box as={"span"} textTransform={"uppercase"}>

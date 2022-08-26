@@ -1,5 +1,6 @@
 import React from "react";
 import { AspectRatio, Box, Image, Text, Flex } from "@chakra-ui/react";
+import Link from "next/link";
 
 import Album from "../../album/types/album.interface";
 
@@ -23,17 +24,19 @@ const ReviewAlbumCard: React.FC<Props> = ({ album }) => {
           <Image src={`https://www.progarchives.com/${album.imageUrl}`} />
         </AspectRatio>
         <Box w={"full"} ml={{ base: 3, sm: 0 }}>
-          <Text
-            fontSize={{ base: 15, sm: 14 }}
-            mt={{ base: 0, sm: 2 }}
-            color={"primary"}
-            textDecoration={"underline"}
-            cursor={"pointer"}
-            fontWeight={600}
-            textAlign={{ base: "start", sm: "center" }}
-          >
-            {album.name}
-          </Text>
+          <Link href={`/album/${album.id}`}>
+            <Text
+              fontSize={{ base: 15, sm: 14 }}
+              mt={{ base: 0, sm: 2 }}
+              color={"primary"}
+              textDecoration={"underline"}
+              cursor={"pointer"}
+              fontWeight={600}
+              textAlign={{ base: "start", sm: "center" }}
+            >
+              {album.name}
+            </Text>
+          </Link>
           <Text mt={0.5} fontSize={13} textAlign={{ base: "start", sm: "center" }}>
             by{" "}
             <Box as={"span"} textTransform={"uppercase"} textDecoration={"underline"} cursor={"pointer"}>
