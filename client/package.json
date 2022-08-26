@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "next",
     "start": "next start",
-    "build": "next build"
+    "build": "next build",
+    "analyse": "ANALYZE=true next build"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.2.4",
@@ -26,6 +27,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^12.2.5",
     "@types/node": "^18.7.6",
     "@types/react": "^18.0.15",
     "typescript": "^4.7.4"
