@@ -1,18 +1,21 @@
 import React from "react";
-import { GetStaticPaths, GetStaticProps } from "next";
+import { GetServerSideProps } from "next";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
 
-import getAlbumIds from "../../features/album/api/getAlbumIds";
 import getAlbum from "../../features/album/api/getAlbum";
+import { useRouter } from "next/router";
 
 const AlbumPage: React.FC = () => {
-  return <></>;
+  const router = useRouter();
+  const albumId = router.query.albumId;
+
+  return <>{albumId}</>;
 };
 
-export const getStaticProps: GetStaticProps = async (ctx) => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
 
-  const albumId = ctx.params.albumId as string;
+  const albumId = ctx.query.albumId as string;
 
   await queryClient.prefetchQuery(["album", albumId], () => getAlbum(albumId));
 
@@ -20,16 +23,6 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
     props: {
       dehydratedState: dehydrate(queryClient),
     },
-    revalidate: 60 * 60 * 24, // one day
-  };
-};
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  const ids = await getAlbumIds();
-
-  return {
-    paths: ids.map((id) => ({ params: { albumId: id } })),
-    fallback: "blocking",
   };
 };
 

@@ -129,12 +129,4 @@ export class AlbumService {
       data: { popularity: newPopularity },
     });
   }
-
-  async findAlbumIds() {
-    const albums = await this.prisma.album.findMany({
-      select: { id: true },
-    });
-
-    return albums.map((album) => album.id);
-  }
 }
