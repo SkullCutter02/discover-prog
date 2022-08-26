@@ -6,6 +6,12 @@ const getRecentReviews = async (page: number, limit: number) => {
     `review/latest?page=${page}&limit=${limit}&include=album,album.artist,user`
   );
 
+  data.forEach((review) => {
+    delete review?.album.trackListing;
+    delete review?.album.musicians;
+    delete review?.album?.artist.biography;
+  });
+
   return data;
 };
 

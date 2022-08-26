@@ -6,6 +6,13 @@ const getMostPopularAlbums = async (page: number, limit: number = 100) => {
     `album/most-popular?page=${page}&limit=${limit}&include=artist,genre`
   );
 
+  data.forEach((album) => {
+    delete album.trackListing;
+    delete album.musicians;
+    delete album?.artist.biography;
+    delete album?.genre.description;
+  });
+
   return data;
 };
 
