@@ -1,11 +1,12 @@
 import React from "react";
 import { dehydrate, useQuery } from "@tanstack/react-query";
-import { Box, Heading, Divider, Button, ButtonGroup } from "@chakra-ui/react";
+import { Box, Heading, Divider } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
 import { withAuthServerSideProps } from "../hoc/withAuthServerSideProps";
 import getSearchResults from "../features/search/api/getSearchResults";
 import Result from "../features/search/components/Result";
+import SearchPaginationButton from "../features/search/components/SearchPaginationButton";
 
 const SearchPage: React.FC = () => {
   const router = useRouter();
@@ -31,22 +32,7 @@ const SearchPage: React.FC = () => {
           <p>This search yielded in 0 results</p>
         )}
 
-        <ButtonGroup display={"flex"} justifyContent={"flex-end"} mt={10} variant={"outline"} spacing={6}>
-          <Button
-            disabled={page <= 1}
-            colorScheme={"blue"}
-            onClick={() => router.push(`/search?q=${query}&page=${page - 1}`)}
-          >
-            Previous Page
-          </Button>
-          <Button
-            disabled={isError || results?.length === 0 || results.length < 20}
-            colorScheme={"purple"}
-            onClick={() => router.push(`/search?q=${query}&page=${page + 1}`)}
-          >
-            Next Page
-          </Button>
-        </ButtonGroup>
+        <SearchPaginationButton isError={isError} results={results} />
       </Box>
     </>
   );
