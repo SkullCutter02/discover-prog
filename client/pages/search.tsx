@@ -13,7 +13,12 @@ const SearchPage: React.FC = () => {
   const query = router.query.q as string;
   const page = parseInt(router.query.page as string);
 
-  const { data: results, isError } = useQuery(["search", query, page], () => getSearchResults(query, page));
+  const { data: results, isError } = useQuery(["search", query, page], () => getSearchResults(query, page), {
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+    cacheTime: Infinity,
+  });
 
   return (
     <>
