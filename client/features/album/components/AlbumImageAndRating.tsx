@@ -14,12 +14,20 @@ const AlbumImageAndRating: React.FC<Props> = ({ album }) => {
 
   return (
     <>
-      <Box w={"30%"} pb={2}>
-        <AspectRatio w={"full"} ratio={1}>
-          <Image src={`https://www.progarchives.com/${album.imageUrl}`} />
-        </AspectRatio>
+      <Box w={{ base: "full", sm: "30%" }} pb={2}>
+        <Box px={{ base: 6, sm: 0 }}>
+          <AspectRatio w={"full"} ratio={1}>
+            <Image src={`https://www.progarchives.com/${album.imageUrl}`} />
+          </AspectRatio>
+        </Box>
 
-        <VStack mt={4} align={"flex-start"} fontWeight={500} spacing={3}>
+        <VStack
+          mt={4}
+          align={"flex-start"}
+          fontSize={{ base: 18, sm: 14, md: 16 }}
+          fontWeight={500}
+          spacing={3}
+        >
           <Text>
             Type:{" "}
             <Box as={"span"} textTransform={"capitalize"}>
@@ -28,7 +36,7 @@ const AlbumImageAndRating: React.FC<Props> = ({ album }) => {
           </Text>
           <Text>
             Rating:{" "}
-            <Box as={"span"} fontSize={20} fontWeight={700} color={"orange.400"}>
+            <Box as={"span"} fontSize={{ base: 22, sm: 20, md: 22 }} fontWeight={700} color={"orange.400"}>
               {albumRating.avgRating}
             </Box>{" "}
             / 5 from {albumRating.numOfReviews} ratings

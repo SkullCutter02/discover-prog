@@ -10,7 +10,7 @@ interface Props {
 const AlbumInformation: React.FC<Props> = ({ album }) => {
   return (
     <>
-      <VStack spacing={5} w={"70%"} pb={2} align={"flex-start"}>
+      <VStack spacing={5} w={{ base: "full", sm: "70%" }} pb={2} align={"flex-start"}>
         <Text fontWeight={600} fontSize={16}>
           Songs / Track Listing
         </Text>

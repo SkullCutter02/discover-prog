@@ -20,7 +20,7 @@ const AlbumPage: React.FC = () => {
     <>
       <Box layerStyle={"condensed-page-container"} as={"main"}>
         <AlbumHeading album={album} />
-        <Stack mt={8} spacing={10} align={"flex-start"} direction={"row"}>
+        <Stack mt={8} spacing={10} align={"flex-start"} direction={{ base: "column", sm: "row" }}>
           <AlbumImageAndRating album={album} />
           <AlbumInformation album={album} />
         </Stack>
