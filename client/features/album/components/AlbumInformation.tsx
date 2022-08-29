@@ -1,7 +1,8 @@
 import React from "react";
-import { Text, VStack } from "@chakra-ui/react";
+import { Accordion } from "@chakra-ui/react";
 
 import Album from "../types/album.interface";
+import AccordionControl from "../../../components/widgets/AccordionControl";
 
 interface Props {
   album: Album;
@@ -10,16 +11,20 @@ interface Props {
 const AlbumInformation: React.FC<Props> = ({ album }) => {
   return (
     <>
-      <VStack spacing={5} w={{ base: "full", sm: "70%" }} pb={2} align={"flex-start"}>
-        <Text fontWeight={600} fontSize={16}>
-          Songs / Track Listing
-        </Text>
-        <Text whiteSpace={"pre-line"}>{album.trackListing}</Text>
-        <Text fontWeight={600} fontSize={16}>
-          Lineup / Musicians
-        </Text>
-        <Text whiteSpace={"pre-line"}>{album.musicians}</Text>
-      </VStack>
+      <Accordion defaultIndex={[0]} allowMultiple w={{ base: "full", sm: "70%" }} pb={2}>
+        <AccordionControl
+          heading={"Songs  / Track Listing"}
+          body={album.trackListing}
+          headingProps={{ fontWeight: 600 }}
+          panelProps={{ whiteSpace: "pre-wrap", fontSize: { base: 16, sm: 15, md: 16 } }}
+        />
+        <AccordionControl
+          heading={"Lineup / Musicians"}
+          body={album.musicians}
+          headingProps={{ fontWeight: 600 }}
+          panelProps={{ whiteSpace: "pre-wrap", fontSize: { base: 16, sm: 15, md: 16 } }}
+        />
+      </Accordion>
     </>
   );
 };
