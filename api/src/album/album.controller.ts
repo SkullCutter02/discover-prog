@@ -39,6 +39,11 @@ export class AlbumController {
     return this.albumService.findRanking(albumId);
   }
 
+  @Get("/:id/rating")
+  getAlbumRating(@Param("id", ParseUUIDPipe) albumId: string) {
+    return this.albumService.findRating(albumId);
+  }
+
   @Get("/artist/:id")
   getArtistAlbums(@Param("id", ParseUUIDPipe) artistId: string, @Query("type") albumType: AlbumType) {
     return this.albumService.findArtistAlbums(artistId, albumType);

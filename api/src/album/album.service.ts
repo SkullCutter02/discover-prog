@@ -96,6 +96,21 @@ export class AlbumService {
     `;
   }
 
+  async findRating(albumId: string) {
+    const stats = await this.prisma.review.aggregate({
+      where: { albumId },
+      _avg: {
+        rating: true,
+      },
+      _count: true,
+    });
+
+    return {
+      avgRating: Math.round((stats._avg.rating + Number.EPSILON) * 100) / 100, // accurately round to 2 digits
+      numOfReviews: stats._count,
+    };
+  }
+
   findArtistAlbums(artistId: string, albumType: AlbumType) {
     return this.prisma.$queryRaw`
       SELECT albums.*, 
