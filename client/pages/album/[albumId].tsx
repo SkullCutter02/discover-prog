@@ -8,6 +8,7 @@ import getAlbum from "../../features/album/api/getAlbum";
 import AlbumHeading from "../../features/album/components/AlbumHeading";
 import AlbumImageAndRating from "../../features/album/components/AlbumImageAndRating";
 import AlbumInformation from "../../features/album/components/AlbumInformation";
+import getAlbumRating from "../../features/album/api/getAlbumRating";
 
 const AlbumPage: React.FC = () => {
   const router = useRouter();
@@ -34,6 +35,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const albumId = ctx.query.albumId as string;
 
   await queryClient.prefetchQuery(["album", albumId], () => getAlbum(albumId));
+  await queryClient.prefetchQuery(["album-rating", albumId], () => getAlbumRating(albumId));
 
   return {
     props: {

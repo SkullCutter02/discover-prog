@@ -12,9 +12,6 @@ const AlbumInformation: React.FC<Props> = ({ album }) => {
     <>
       <VStack spacing={5} w={"70%"} pb={2} align={"flex-start"}>
         <Text fontWeight={600} fontSize={16}>
-          {album.albumType} Album, released in {album.releaseYear}
-        </Text>
-        <Text fontWeight={600} fontSize={16}>
           Songs / Track Listing
         </Text>
         <Text whiteSpace={"pre-line"}>{album.trackListing}</Text>

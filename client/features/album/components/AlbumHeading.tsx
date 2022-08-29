@@ -13,15 +13,17 @@ const AlbumHeading: React.FC<Props> = ({ album }) => {
       <Heading fontWeight={700} fontSize={30} textTransform={"uppercase"}>
         {album.name}
       </Heading>
-      <Text mt={2} fontSize={19}>
-        <Box fontWeight={600} textDecoration={"underline"} as={"span"} cursor={"pointer"} color={"primary"}>
-          {album.artist.name}
-        </Box>{" "}
-        •{" "}
-        <Box as={"span"} color={"gray.600"}>
-          {album.genre.name}
-        </Box>
-      </Text>
+      <Box
+        mt={2}
+        fontSize={19}
+        fontWeight={600}
+        textDecoration={"underline"}
+        as={"span"}
+        cursor={"pointer"}
+        color={"primary"}
+      >
+        {album.artist.name}
+      </Box>
     </>
   );
 };
