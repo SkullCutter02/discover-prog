@@ -22,7 +22,7 @@ const SearchPage: React.FC = () => {
 
   return (
     <>
-      <Box layerStyle={"page-container"} as={"main"} px={{ base: 5, sm: 9, md: "11vw" }}>
+      <Box layerStyle={"condensed-page-container"} as={"main"}>
         <Heading fontSize={28}>
           <Box as={"span"} fontStyle={"italic"}>
             {query}

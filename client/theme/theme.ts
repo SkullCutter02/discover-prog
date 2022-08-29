@@ -36,6 +36,10 @@ const theme = extendTheme({
       py: 14,
       px: { base: 5, md: 10 },
     },
+    "condensed-page-container": {
+      py: 14,
+      px: { base: 5, sm: 9, md: "11vw" },
+    },
   },
 });
 
