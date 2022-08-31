@@ -28,9 +28,10 @@ export class ReviewController {
   @Get("/latest")
   getLatestReviews(
     @Query() offsetPaginateDto: OffsetPaginateDto,
-    @Query("include", ParseIncludeQueryPipe) include: Prisma.ReviewInclude
+    @Query("include", ParseIncludeQueryPipe) include: Prisma.ReviewInclude,
+    @Query("albumId") albumId?: string
   ) {
-    return this.reviewService.findLatest(offsetPaginateDto, include);
+    return this.reviewService.findLatest(offsetPaginateDto, include, albumId);
   }
 
   @Get("/:id")

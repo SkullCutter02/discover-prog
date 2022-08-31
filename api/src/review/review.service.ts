@@ -75,9 +75,9 @@ export class ReviewService {
     });
   }
 
-  findLatest({ limit, page }: OffsetPaginateDto, include: Prisma.ReviewInclude) {
+  findLatest({ limit, page }: OffsetPaginateDto, include?: Prisma.ReviewInclude, albumId?: string) {
     return this.prisma.review.findMany({
-      where: { NOT: { body: null } },
+      where: { NOT: { body: null }, albumId },
       orderBy: { createdAt: "desc" },
       take: limit,
       skip: (page - 1) * limit,
